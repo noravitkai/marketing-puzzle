@@ -18,17 +18,12 @@
     "jsx": "preserve",
     "incremental": true,
     "plugins": [
-      {
-        "name": "next"
-      }
+      { "name": "next" }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@payload-config": [
-        "./payload.config.ts"
-      ]
+      "@/*": ["./src/*"],
+      "@payload-config": ["./payload.config.ts"]
     }
   },
   "include": [
