@@ -2,6 +2,7 @@ import sharp from 'sharp'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { buildConfig } from 'payload'
+import { heroBlock } from '@/payload/blocks/hero'
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
@@ -9,14 +10,20 @@ export default buildConfig({
 
   editor: lexicalEditor(),
 
-  admin: { user: 'users' },
+  admin: {
+    user: 'users',
+  },
 
   collections: [
     {
       slug: 'users',
       auth: true,
       fields: [
-        { name: 'fullName', type: 'text', required: true },
+        {
+          name: 'fullName',
+          type: 'text',
+          required: true,
+        },
         {
           name: 'role',
           type: 'select',
@@ -26,12 +33,48 @@ export default buildConfig({
       ],
     },
     {
-      slug: 'pages',
-      access: { read: () => true },
+      slug: 'media',
+      upload: true,
+      access: {
+        read: () => true,
+      },
       fields: [
-        { name: 'title', type: 'text', required: true },
-        { name: 'slug', type: 'text', required: true, unique: true },
-        { name: 'content', type: 'richText' },
+        {
+          name: 'alt',
+          label: 'Alt szöveg',
+          type: 'text',
+          required: false,
+        },
+      ],
+    },
+    {
+      slug: 'pages',
+      access: {
+        read: () => true,
+      },
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'slug',
+          type: 'text',
+          required: true,
+          unique: true,
+        },
+        {
+          name: 'layout',
+          label: 'Page layout',
+          type: 'blocks',
+          required: true,
+          blocks: [heroBlock],
+        },
+        {
+          name: 'content',
+          type: 'richText',
+        },
       ],
     },
   ],
