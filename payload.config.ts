@@ -3,6 +3,7 @@ import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { buildConfig } from 'payload'
 import { heroBlock } from '@/payload/blocks/hero'
+import { videoBlock } from '@/payload/blocks/video'
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
@@ -69,7 +70,7 @@ export default buildConfig({
           label: 'Page layout',
           type: 'blocks',
           required: true,
-          blocks: [heroBlock],
+          blocks: [heroBlock, videoBlock],
         },
         {
           name: 'content',

@@ -1,4 +1,5 @@
 import Hero from '@/components/home/Hero'
+import Video from '@/components/home/Video'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type HeroCardFromPayload = {
@@ -30,11 +31,21 @@ type HeroBlockFromPayload = {
   cards?: HeroCardFromPayload[]
 }
 
+type VideoBlockFromPayload = {
+  id: string
+  blockType: 'video'
+  heading: string
+  lead?: string | null
+  description?: string | null
+  youtubeId: string
+  privacyEnhanced?: boolean | null
+}
+
 type PageFromPayload = {
   id: string
   title: string
   slug: string
-  layout: HeroBlockFromPayload[]
+  layout: (HeroBlockFromPayload | VideoBlockFromPayload)[]
 }
 
 export default async function HomePage() {
@@ -54,18 +65,47 @@ export default async function HomePage() {
   const docs = result.docs as PageFromPayload[]
   const [page] = docs
 
-  const heroBlock = page.layout.find((block: HeroBlockFromPayload) => block.blockType === 'hero')!
-
   return (
-    <Hero
-      mainTitle={heroBlock.mainTitle}
-      highlightedTitle={heroBlock.highlightedTitle ?? undefined}
-      description={heroBlock.description}
-      primaryCtaLabel={heroBlock.primaryCtaLabel ?? undefined}
-      primaryCtaUrl={heroBlock.primaryCtaUrl ?? undefined}
-      secondaryCtaLabel={heroBlock.secondaryCtaLabel ?? undefined}
-      secondaryCtaUrl={heroBlock.secondaryCtaUrl ?? undefined}
-      cards={heroBlock.cards ?? []}
-    />
+    <>
+      {page.layout.map((block) => {
+        switch (block.blockType) {
+          case 'hero': {
+            const heroBlock = block as HeroBlockFromPayload
+
+            return (
+              <Hero
+                key={heroBlock.id}
+                mainTitle={heroBlock.mainTitle}
+                highlightedTitle={heroBlock.highlightedTitle ?? undefined}
+                description={heroBlock.description}
+                primaryCtaLabel={heroBlock.primaryCtaLabel ?? undefined}
+                primaryCtaUrl={heroBlock.primaryCtaUrl ?? undefined}
+                secondaryCtaLabel={heroBlock.secondaryCtaLabel ?? undefined}
+                secondaryCtaUrl={heroBlock.secondaryCtaUrl ?? undefined}
+                cards={heroBlock.cards ?? []}
+              />
+            )
+          }
+
+          case 'video': {
+            const videoBlock = block as VideoBlockFromPayload
+
+            return (
+              <Video
+                key={videoBlock.id}
+                heading={videoBlock.heading}
+                lead={videoBlock.lead ?? undefined}
+                description={videoBlock.description ?? undefined}
+                youtubeId={videoBlock.youtubeId}
+                privacyEnhanced={videoBlock.privacyEnhanced ?? false}
+              />
+            )
+          }
+
+          default:
+            return null
+        }
+      })}
+    </>
   )
 }
