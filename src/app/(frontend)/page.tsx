@@ -1,4 +1,5 @@
 import Hero from '@/components/home/Hero'
+import Video from '@/components/home/Video'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type HeroCardFromPayload = {
@@ -57,15 +58,19 @@ export default async function HomePage() {
   const heroBlock = page.layout.find((block: HeroBlockFromPayload) => block.blockType === 'hero')!
 
   return (
-    <Hero
-      mainTitle={heroBlock.mainTitle}
-      highlightedTitle={heroBlock.highlightedTitle ?? undefined}
-      description={heroBlock.description}
-      primaryCtaLabel={heroBlock.primaryCtaLabel ?? undefined}
-      primaryCtaUrl={heroBlock.primaryCtaUrl ?? undefined}
-      secondaryCtaLabel={heroBlock.secondaryCtaLabel ?? undefined}
-      secondaryCtaUrl={heroBlock.secondaryCtaUrl ?? undefined}
-      cards={heroBlock.cards ?? []}
-    />
+    <>
+      <Hero
+        mainTitle={heroBlock.mainTitle}
+        highlightedTitle={heroBlock.highlightedTitle ?? undefined}
+        description={heroBlock.description}
+        primaryCtaLabel={heroBlock.primaryCtaLabel ?? undefined}
+        primaryCtaUrl={heroBlock.primaryCtaUrl ?? undefined}
+        secondaryCtaLabel={heroBlock.secondaryCtaLabel ?? undefined}
+        secondaryCtaUrl={heroBlock.secondaryCtaUrl ?? undefined}
+        cards={heroBlock.cards ?? []}
+      />
+
+      <Video />
+    </>
   )
 }
