@@ -7,7 +7,7 @@ import { Popover, PopoverButton, PopoverBackdrop, PopoverPanel } from '@headless
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 
-import { Container } from '@/components/Container'
+import { Container } from '@/components/ui/Container'
 
 function MobileNavItem({ href, children }: { href: string; children: React.ReactNode }) {
   return (

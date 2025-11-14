@@ -1,25 +1,71 @@
-async function getPages() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/pages?limit=10`, {
-    cache: 'no-store',
-  })
-  if (!res.ok) throw new Error('Failed to fetch pages')
-  return res.json()
+import Hero from '@/components/home/Hero'
+import { getPayloadClient } from '@/payload/getPayloadClient'
+
+type HeroCardFromPayload = {
+  id: string
+  badgeText: string
+  linkType: 'internal' | 'external'
+  href?: string | null
+  internalPage?: {
+    id: string
+    slug: string
+  } | null
+  image?: {
+    id: string
+    url?: string | null
+    alt?: string | null
+  } | null
 }
 
-export default async function Home() {
-  const data = await getPages()
-  const pages = data?.docs ?? []
+type HeroBlockFromPayload = {
+  id: string
+  blockType: 'hero'
+  mainTitle: string
+  highlightedTitle?: string | null
+  description: string
+  primaryCtaLabel?: string | null
+  primaryCtaUrl?: string | null
+  secondaryCtaLabel?: string | null
+  secondaryCtaUrl?: string | null
+  cards?: HeroCardFromPayload[]
+}
+
+type PageFromPayload = {
+  id: string
+  title: string
+  slug: string
+  layout: HeroBlockFromPayload[]
+}
+
+export default async function HomePage() {
+  const payload = await getPayloadClient()
+
+  const result = await payload.find({
+    collection: 'pages',
+    limit: 1,
+    depth: 2,
+    where: {
+      slug: {
+        equals: 'fooldal',
+      },
+    },
+  })
+
+  const docs = result.docs as PageFromPayload[]
+  const [page] = docs
+
+  const heroBlock = page.layout.find((block: HeroBlockFromPayload) => block.blockType === 'hero')!
+
   return (
-    <main className="mx-auto max-w-3xl p-6">
-      <h1 className="mb-4 text-2xl font-semibold">Pages</h1>
-      <ul className="space-y-2">
-        {pages.map((p: any) => (
-          <li key={p.id} className="rounded border p-3">
-            <div className="font-medium">{p.title}</div>
-            <div className="text-sm text-gray-500">/{p.slug}</div>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <Hero
+      mainTitle={heroBlock.mainTitle}
+      highlightedTitle={heroBlock.highlightedTitle ?? undefined}
+      description={heroBlock.description}
+      primaryCtaLabel={heroBlock.primaryCtaLabel ?? undefined}
+      primaryCtaUrl={heroBlock.primaryCtaUrl ?? undefined}
+      secondaryCtaLabel={heroBlock.secondaryCtaLabel ?? undefined}
+      secondaryCtaUrl={heroBlock.secondaryCtaUrl ?? undefined}
+      cards={heroBlock.cards ?? []}
+    />
   )
 }
