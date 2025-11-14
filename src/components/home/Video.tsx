@@ -5,12 +5,21 @@ import { Heading, Lead, Paragraph } from '@/components/ui/Text'
 import leftIllustration from '@/images/illustrations/lightbulb.svg'
 import rightIllustration from '@/images/illustrations/puzzle-pieces.svg'
 
-type Props = {
-  youtubeId?: string
+type VideoProps = {
+  heading: string
+  lead?: string
+  description?: string
+  youtubeId: string
   privacyEnhanced?: boolean
 }
 
-export default function Video({ youtubeId = 'vBJMdDTcTLo', privacyEnhanced = false }: Props) {
+export default function Video({
+  heading,
+  lead,
+  description,
+  youtubeId,
+  privacyEnhanced = false,
+}: VideoProps) {
   const domain = privacyEnhanced ? 'https://www.youtube-nocookie.com' : 'https://www.youtube.com'
   const src = `${domain}/embed/${youtubeId}?playlist=${youtubeId}&loop=1&autoplay=1&mute=1&playsinline=1&controls=1&fs=1&rel=0&modestbranding=1&iv_load_policy=3`
 
@@ -18,15 +27,15 @@ export default function Video({ youtubeId = 'vBJMdDTcTLo', privacyEnhanced = fal
     <section id="video-section">
       <Container className="mt-16 sm:mt-20">
         <div className="flex flex-col items-center gap-6 text-center">
-          <Heading as="h2">Szemléletünk</Heading>
-          <Lead as="p" id="home-video-title">
-            A Te célod, a Mi szenvedélyünk
-          </Lead>
-          <Paragraph className="max-w-2xl">
-            Globalizált világunk dinamikusan változó viszonyai között már nem elég jó terméket
-            kínálni – személyre szabott szolgáltatásainkkal segítünk Neked versenytársaid sorából
-            kitűnni.
-          </Paragraph>
+          <Heading as="h2">{heading}</Heading>
+
+          {lead && (
+            <Lead as="p" id="home-video-title">
+              {lead}
+            </Lead>
+          )}
+
+          {description && <Paragraph className="max-w-2xl">{description}</Paragraph>}
         </div>
         <div className="mt-8 w-full">
           <div className="flex items-center justify-between gap-2 lg:gap-4">
