@@ -60,6 +60,13 @@ export const servicesBlock: Block = {
           relationTo: 'pages',
           required: false,
         },
+        {
+          name: 'icon',
+          label: 'Ikon vagy illusztráció (SVG)',
+          type: 'upload',
+          relationTo: 'media',
+          required: true,
+        },
       ],
     },
   ],

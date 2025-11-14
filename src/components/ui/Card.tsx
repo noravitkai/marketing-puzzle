@@ -28,6 +28,18 @@ Card.Body = function CardBody({ children }: { children: React.ReactNode }) {
   return <div className="flex-1">{children}</div>
 }
 
+Card.Icon = function CardIcon({ src, alt }: { src: string; alt?: string }) {
+  return (
+    <img
+      src={src}
+      alt={alt ?? ''}
+      className="h-12 w-12 object-contain"
+      loading="lazy"
+      aria-hidden={!alt}
+    />
+  )
+}
+
 Card.Title = function CardTitle<T extends React.ElementType = 'h3'>({
   as,
   children,
@@ -37,7 +49,7 @@ Card.Title = function CardTitle<T extends React.ElementType = 'h3'>({
   const Component = as ?? 'h3'
 
   return (
-    <Component className="text-base font-semibold tracking-tight text-zinc-800">
+    <Component className="mt-3 text-base font-semibold tracking-tight text-zinc-800">
       {children}
     </Component>
   )

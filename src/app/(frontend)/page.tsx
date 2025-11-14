@@ -39,6 +39,11 @@ type ServiceCardFromPayload = {
     id: string
     slug: string
   } | null
+  icon?: {
+    id: string
+    url?: string | null
+    alt?: string | null
+  } | null
 }
 
 type ServicesBlockFromPayload = {
@@ -106,6 +111,8 @@ export default async function HomePage() {
                 title: item.title,
                 description: item.description,
                 href: item.targetPage?.slug ? `/${item.targetPage.slug}` : undefined,
+                iconUrl: item.icon?.url ?? undefined,
+                iconAlt: item.icon?.alt ?? item.title,
               })) ?? []
 
             return (

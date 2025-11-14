@@ -9,6 +9,8 @@ export type ServiceCard = {
   title: string
   description: string
   href?: string
+  iconUrl?: string
+  iconAlt?: string
 }
 
 type ServicesProps = {
@@ -44,6 +46,7 @@ export default function Services({
             return (
               <Card key={service.id} as="article" className={clsx(tiltClass)}>
                 <Card.Body>
+                  {service.iconUrl && <Card.Icon src={service.iconUrl} alt={service.iconAlt} />}
                   <Card.Title>{service.title}</Card.Title>
                   <Card.Description>{service.description}</Card.Description>
                 </Card.Body>
