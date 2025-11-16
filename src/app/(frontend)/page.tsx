@@ -1,5 +1,6 @@
 import Hero from '@/components/home/Hero'
 import Video from '@/components/home/Video'
+import Services, { ServiceCard } from '@/components/home/Services'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type HeroCardFromPayload = {
@@ -41,11 +42,36 @@ type VideoBlockFromPayload = {
   privacyEnhanced?: boolean | null
 }
 
+type ServiceCardFromPayload = {
+  id: string
+  title: string
+  description: string
+  targetPage?: {
+    id: string
+    slug: string
+  } | null
+  icon?: {
+    id: string
+    url?: string | null
+    alt?: string | null
+  } | null
+}
+
+type ServicesBlockFromPayload = {
+  id: string
+  blockType: 'services'
+  heading: string
+  lead?: string | null
+  description?: string | null
+  ctaLabel: string
+  items?: ServiceCardFromPayload[]
+}
+
 type PageFromPayload = {
   id: string
   title: string
   slug: string
-  layout: (HeroBlockFromPayload | VideoBlockFromPayload)[]
+  layout: (HeroBlockFromPayload | VideoBlockFromPayload | ServicesBlockFromPayload)[]
 }
 
 export default async function HomePage() {
@@ -83,6 +109,31 @@ export default async function HomePage() {
                 secondaryCtaLabel={heroBlock.secondaryCtaLabel ?? undefined}
                 secondaryCtaUrl={heroBlock.secondaryCtaUrl ?? undefined}
                 cards={heroBlock.cards ?? []}
+              />
+            )
+          }
+
+          case 'services': {
+            const servicesBlock = block as ServicesBlockFromPayload
+
+            const services: ServiceCard[] =
+              servicesBlock.items?.map((item) => ({
+                id: item.id,
+                title: item.title,
+                description: item.description,
+                href: item.targetPage?.slug ? `/${item.targetPage.slug}` : undefined,
+                iconUrl: item.icon?.url ?? undefined,
+                iconAlt: item.icon?.alt ?? item.title,
+              })) ?? []
+
+            return (
+              <Services
+                key={servicesBlock.id}
+                heading={servicesBlock.heading}
+                lead={servicesBlock.lead ?? undefined}
+                description={servicesBlock.description ?? undefined}
+                ctaLabel={servicesBlock.ctaLabel}
+                services={services}
               />
             )
           }
