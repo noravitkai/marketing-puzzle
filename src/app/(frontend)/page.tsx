@@ -1,4 +1,5 @@
 import Hero from '@/components/home/Hero'
+import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
@@ -31,6 +32,16 @@ type HeroBlockFromPayload = {
   cards?: HeroCardFromPayload[]
 }
 
+type VideoBlockFromPayload = {
+  id: string
+  blockType: 'video'
+  heading: string
+  lead?: string | null
+  description?: string | null
+  youtubeId: string
+  privacyEnhanced?: boolean | null
+}
+
 type ServiceCardFromPayload = {
   id: string
   title: string
@@ -60,7 +71,7 @@ type PageFromPayload = {
   id: string
   title: string
   slug: string
-  layout: (HeroBlockFromPayload | ServicesBlockFromPayload)[]
+  layout: (HeroBlockFromPayload | VideoBlockFromPayload | ServicesBlockFromPayload)[]
 }
 
 export default async function HomePage() {
@@ -123,6 +134,21 @@ export default async function HomePage() {
                 description={servicesBlock.description ?? undefined}
                 ctaLabel={servicesBlock.ctaLabel}
                 services={services}
+              />
+            )
+          }
+
+          case 'video': {
+            const videoBlock = block as VideoBlockFromPayload
+
+            return (
+              <Video
+                key={videoBlock.id}
+                heading={videoBlock.heading}
+                lead={videoBlock.lead ?? undefined}
+                description={videoBlock.description ?? undefined}
+                youtubeId={videoBlock.youtubeId}
+                privacyEnhanced={videoBlock.privacyEnhanced ?? false}
               />
             )
           }
