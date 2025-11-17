@@ -5,6 +5,7 @@ import { buildConfig } from 'payload'
 import { heroBlock } from '@/payload/blocks/hero'
 import { videoBlock } from '@/payload/blocks/video'
 import { servicesBlock } from '@/payload/blocks/services'
+import { teamBlock } from '@/payload/blocks/team'
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
@@ -71,7 +72,7 @@ export default buildConfig({
           label: 'Page layout',
           type: 'blocks',
           required: true,
-          blocks: [heroBlock, videoBlock, servicesBlock],
+          blocks: [heroBlock, videoBlock, servicesBlock, teamBlock],
         },
         {
           name: 'content',

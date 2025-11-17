@@ -1,6 +1,7 @@
 import Hero from '@/components/home/Hero'
 import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
+import Team, { TeamMember } from '@/components/home/Team'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type HeroCardFromPayload = {
@@ -67,11 +68,40 @@ type ServicesBlockFromPayload = {
   items?: ServiceCardFromPayload[]
 }
 
+type TeamMemberFromPayload = {
+  id: string
+  name: string
+  description?: string | null
+  positions?: {
+    id: string
+    label: string
+  }[]
+  photo?: {
+    id: string
+    url?: string | null
+    alt?: string | null
+  } | null
+}
+
+type TeamBlockFromPayload = {
+  id: string
+  blockType: 'team'
+  heading: string
+  lead?: string | null
+  description?: string | null
+  members?: TeamMemberFromPayload[]
+}
+
 type PageFromPayload = {
   id: string
   title: string
   slug: string
-  layout: (HeroBlockFromPayload | VideoBlockFromPayload | ServicesBlockFromPayload)[]
+  layout: (
+    | HeroBlockFromPayload
+    | VideoBlockFromPayload
+    | ServicesBlockFromPayload
+    | TeamBlockFromPayload
+  )[]
 }
 
 export default async function HomePage() {
@@ -149,6 +179,30 @@ export default async function HomePage() {
                 description={videoBlock.description ?? undefined}
                 youtubeId={videoBlock.youtubeId}
                 privacyEnhanced={videoBlock.privacyEnhanced ?? false}
+              />
+            )
+          }
+
+          case 'team': {
+            const teamBlock = block as TeamBlockFromPayload
+
+            const members: TeamMember[] =
+              teamBlock.members?.map((member) => ({
+                id: member.id,
+                name: member.name,
+                positions: member.positions?.map((p) => p.label) ?? [],
+                imageUrl: member.photo?.url ?? undefined,
+                imageAlt: member.photo?.alt ?? undefined,
+                description: member.description ?? undefined,
+              })) ?? []
+
+            return (
+              <Team
+                key={teamBlock.id}
+                heading={teamBlock.heading}
+                lead={teamBlock.lead ?? undefined}
+                description={teamBlock.description ?? undefined}
+                members={members}
               />
             )
           }
