@@ -1,6 +1,7 @@
 import Hero from '@/components/home/Hero'
 import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
+import Testimonials, { Testimonial } from '@/components/home/Testimonials'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type HeroCardFromPayload = {
@@ -67,11 +68,32 @@ type ServicesBlockFromPayload = {
   items?: ServiceCardFromPayload[]
 }
 
+type TestimonialFromPayload = {
+  id: string
+  quote: string
+  author: string
+  company?: string | null
+}
+
+type TestimonialsBlockFromPayload = {
+  id: string
+  blockType: 'testimonials'
+  heading: string
+  lead?: string | null
+  description?: string | null
+  items?: TestimonialFromPayload[]
+}
+
 type PageFromPayload = {
   id: string
   title: string
   slug: string
-  layout: (HeroBlockFromPayload | VideoBlockFromPayload | ServicesBlockFromPayload)[]
+  layout: (
+    | HeroBlockFromPayload
+    | VideoBlockFromPayload
+    | ServicesBlockFromPayload
+    | TestimonialsBlockFromPayload
+  )[]
 }
 
 export default async function HomePage() {
@@ -149,6 +171,28 @@ export default async function HomePage() {
                 description={videoBlock.description ?? undefined}
                 youtubeId={videoBlock.youtubeId}
                 privacyEnhanced={videoBlock.privacyEnhanced ?? false}
+              />
+            )
+          }
+
+          case 'testimonials': {
+            const testimonialsBlock = block as TestimonialsBlockFromPayload
+
+            const items: Testimonial[] =
+              testimonialsBlock.items?.map((item) => ({
+                id: item.id,
+                quote: item.quote,
+                author: item.author,
+                company: item.company ?? undefined,
+              })) ?? []
+
+            return (
+              <Testimonials
+                key={testimonialsBlock.id}
+                heading={testimonialsBlock.heading}
+                lead={testimonialsBlock.lead ?? undefined}
+                description={testimonialsBlock.description ?? undefined}
+                items={items}
               />
             )
           }
