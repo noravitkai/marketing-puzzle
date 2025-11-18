@@ -57,57 +57,58 @@ export default function Team({ heading, lead, description, members }: TeamProps)
           {lead ? <Lead as="p">{lead}</Lead> : null}
           {description ? <Paragraph className="max-w-2xl">{description}</Paragraph> : null}
         </div>
-        <ul role="list" className="mt-8 grid grid-cols-2 gap-4 sm:gap-8 xl:grid-cols-3">
-          {members.map((member, index) => {
-            if (!member.imageUrl) return null
-            const tiltClass = tiltVariants[index % tiltVariants.length]
-            return (
-              <li key={member.id} className="flex h-full">
-                <div className="flex flex-col items-center">
-                  <div className={clsx('relative w-full transition-transform', tiltClass)}>
-                    <img
-                      src={member.imageUrl}
-                      alt={member.imageAlt ?? ''}
-                      className="aspect-video w-full rounded-md object-cover"
-                    />
-                    {member.positions && member.positions.length > 0 ? (
-                      <div className="pointer-events-none absolute inset-0 hidden md:block">
-                        {member.positions.slice(0, 4).map((position, posIndex) => {
-                          const posClass = getBadgePositionClasses(
-                            Math.min(member.positions!.length, 4),
-                            posIndex,
-                          )
-                          return (
-                            <div
-                              key={position}
-                              className={clsx('pointer-events-auto absolute', posClass)}
-                            >
-                              <Badge>{position}</Badge>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="flex w-full flex-1 justify-center">
-                    <div className="-mt-4 inline-flex w-[80%] flex-col items-center gap-1 rounded-md bg-white/90 p-2 text-left text-xs shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm sm:-mt-6 sm:items-start sm:p-4">
-                      <h3 className="font-medium tracking-tighter text-zinc-800 uppercase">
-                        {member.name}
-                      </h3>
+        <div className="mt-8 px-0 md:px-2">
+          <ul role="list" className="grid grid-cols-2 gap-4 sm:gap-8 xl:grid-cols-3">
+            {members.map((member, index) => {
+              if (!member.imageUrl) return null
+              const tiltClass = tiltVariants[index % tiltVariants.length]
+              return (
+                <li key={member.id} className="flex h-full">
+                  <div className="flex flex-col items-center">
+                    <div className={clsx('relative w-full transition-transform', tiltClass)}>
+                      <img
+                        src={member.imageUrl}
+                        alt={member.imageAlt ?? ''}
+                        className="aspect-video w-full rounded-md object-cover"
+                      />
                       {member.positions && member.positions.length > 0 ? (
-                        <p className="text-zinc-600 md:hidden">{member.positions.join(' • ')}</p>
-                      ) : null}
-                      {member.description ? (
-                        <p className="hidden text-zinc-600 md:block">{member.description}</p>
+                        <div className="pointer-events-none absolute inset-0 hidden md:block">
+                          {member.positions.slice(0, 4).map((position, posIndex) => {
+                            const posClass = getBadgePositionClasses(
+                              Math.min(member.positions!.length, 4),
+                              posIndex,
+                            )
+                            return (
+                              <div
+                                key={position}
+                                className={clsx('pointer-events-auto absolute', posClass)}
+                              >
+                                <Badge>{position}</Badge>
+                              </div>
+                            )
+                          })}
+                        </div>
                       ) : null}
                     </div>
+                    <div className="flex w-full flex-1 justify-center">
+                      <div className="-mt-4 inline-flex w-[80%] flex-col items-center gap-1 rounded-md bg-white/90 p-2 text-center text-xs shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm sm:-mt-6 sm:p-4 md:items-start md:text-left">
+                        <h3 className="font-medium tracking-tighter text-zinc-800 uppercase">
+                          {member.name}
+                        </h3>
+                        {member.positions && member.positions.length > 0 ? (
+                          <p className="text-zinc-600 md:hidden">{member.positions.join(' • ')}</p>
+                        ) : null}
+                        {member.description ? (
+                          <p className="hidden text-zinc-600 md:block">{member.description}</p>
+                        ) : null}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </li>
-            )
-          })}
-        </ul>
-        <div className="mt-40">Bla bla blaaa</div>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
       </Container>
     </section>
   )
