@@ -41,9 +41,13 @@ function QuoteMark() {
   )
 }
 
+const CIRCLE_RADIUS = 16
+const CIRCLE_LENGTH = 2 * Math.PI * CIRCLE_RADIUS
+
 export default function Testimonials({ heading, lead, description, items }: TestimonialsProps) {
   const sectionRef = useRef<HTMLElement | null>(null)
   const [cardHeight, setCardHeight] = useState<number | null>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
 
   useEffect(() => {
     function updateHeight() {
@@ -78,6 +82,9 @@ export default function Testimonials({ heading, lead, description, items }: Test
     return null
   }
 
+  const progress = items.length === 0 ? 0 : (activeIndex + 1) / items.length
+  const strokeOffset = CIRCLE_LENGTH * (1 - progress)
+
   return (
     <section id="testimonials-section" ref={sectionRef as React.RefObject<HTMLElement>}>
       <Container className="mt-16 sm:mt-24">
@@ -94,6 +101,7 @@ export default function Testimonials({ heading, lead, description, items }: Test
             modules={[Autoplay, Navigation]}
             loop={items.length > 1}
             slidesPerView={1}
+            slidesPerGroup={1}
             spaceBetween={32}
             autoplay={{ delay: 8000 }}
             navigation={{
@@ -103,8 +111,11 @@ export default function Testimonials({ heading, lead, description, items }: Test
             breakpoints={{
               1024: {
                 slidesPerView: 2,
+                slidesPerGroup: 1,
               },
             }}
+            onSwiper={(swiper) => setActiveIndex(swiper.realIndex)}
+            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
             className="swiper-container"
           >
             {items.map((item) => (
@@ -128,27 +139,54 @@ export default function Testimonials({ heading, lead, description, items }: Test
           </Swiper>
         </div>
 
-        <div
-          className={clsx(
-            'mt-6 flex items-center justify-center gap-3',
-            items.length === 2 ? 'lg:hidden' : '',
-          )}
-        >
-          <button
-            type="button"
-            className="prev-button text-primary hover:bg-primary ring-primary rounded-full p-3 shadow-md ring-1 shadow-zinc-800/5 transition duration-300 ease-in-out hover:rotate-9 hover:text-white"
-            aria-label="Előző vélemény"
-          >
-            <ArrowLeftIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+        <div className="mt-3 flex items-center justify-between gap-4">
+          <div className="flex items-center">
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-full">
+              <svg className="h-full w-full -rotate-90" viewBox="0 0 40 40" aria-hidden="true">
+                <circle
+                  cx="20"
+                  cy="20"
+                  r={CIRCLE_RADIUS}
+                  className="text-zinc-100"
+                  fill="transparent"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeDasharray={CIRCLE_LENGTH}
+                  strokeDashoffset={0}
+                />
+                <circle
+                  cx="20"
+                  cy="20"
+                  r={CIRCLE_RADIUS}
+                  className="text-secondary transition-all duration-500 ease-out"
+                  fill="transparent"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeDasharray={CIRCLE_LENGTH}
+                  strokeDashoffset={strokeOffset}
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+          </div>
 
-          <button
-            type="button"
-            className="next-button text-primary hover:bg-primary ring-primary rounded-full p-3 shadow-md ring-1 shadow-zinc-800/5 transition duration-300 ease-in-out hover:-rotate-9 hover:text-white"
-            aria-label="Következő vélemény"
-          >
-            <ArrowRightIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <div className={clsx('flex items-center gap-3', items.length === 2 ? 'lg:hidden' : '')}>
+            <button
+              type="button"
+              className="prev-button text-primary hover:bg-primary ring-primary rounded-full p-2 shadow-md ring-1 shadow-zinc-800/5 transition duration-300 ease-in-out hover:rotate-9 hover:text-white"
+              aria-label="Előző vélemény"
+            >
+              <ArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
+            </button>
+
+            <button
+              type="button"
+              className="next-button text-primary hover:bg-primary ring-primary rounded-full p-2 shadow-md ring-1 shadow-zinc-800/5 transition duration-300 ease-in-out hover:-rotate-9 hover:text-white"
+              aria-label="Következő vélemény"
+            >
+              <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
         </div>
       </Container>
     </section>
