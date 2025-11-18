@@ -82,8 +82,10 @@ export default function Testimonials({ heading, lead, description, items }: Test
     return null
   }
 
-  const progress = items.length === 0 ? 0 : (activeIndex + 1) / items.length
+  const progress = (activeIndex + 1) / items.length
   const strokeOffset = CIRCLE_LENGTH * (1 - progress)
+
+  const showControls = items.length > 1
 
   return (
     <section id="testimonials-section" ref={sectionRef as React.RefObject<HTMLElement>}>
@@ -103,17 +105,25 @@ export default function Testimonials({ heading, lead, description, items }: Test
             slidesPerView={1}
             slidesPerGroup={1}
             spaceBetween={32}
-            autoplay={{ delay: 8000 }}
-            navigation={{
-              nextEl: '.next-button',
-              prevEl: '.prev-button',
-            }}
-            breakpoints={{
-              1024: {
-                slidesPerView: 2,
-                slidesPerGroup: 1,
-              },
-            }}
+            autoplay={items.length > 1 ? { delay: 8000 } : false}
+            navigation={
+              items.length > 1
+                ? {
+                    nextEl: '.next-button',
+                    prevEl: '.prev-button',
+                  }
+                : undefined
+            }
+            breakpoints={
+              items.length > 1
+                ? {
+                    1024: {
+                      slidesPerView: 2,
+                      slidesPerGroup: 1,
+                    },
+                  }
+                : undefined
+            }
             onSwiper={(swiper) => setActiveIndex(swiper.realIndex)}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
             className="swiper-container"
@@ -139,55 +149,62 @@ export default function Testimonials({ heading, lead, description, items }: Test
           </Swiper>
         </div>
 
-        <div className="mt-3 flex items-center justify-between gap-4">
-          <div className="flex items-center">
-            <div className="relative flex h-8 w-8 items-center justify-center rounded-full">
-              <svg className="h-full w-full -rotate-90" viewBox="0 0 40 40" aria-hidden="true">
-                <circle
-                  cx="20"
-                  cy="20"
-                  r={CIRCLE_RADIUS}
-                  className="text-zinc-100"
-                  fill="transparent"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeDasharray={CIRCLE_LENGTH}
-                  strokeDashoffset={0}
-                />
-                <circle
-                  cx="20"
-                  cy="20"
-                  r={CIRCLE_RADIUS}
-                  className="text-secondary transition-all duration-500 ease-out"
-                  fill="transparent"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeDasharray={CIRCLE_LENGTH}
-                  strokeDashoffset={strokeOffset}
-                  strokeLinecap="round"
-                />
-              </svg>
+        {showControls && (
+          <div
+            className={clsx(
+              'mt-3 flex items-center justify-between gap-4',
+              items.length === 2 ? 'lg:hidden' : '',
+            )}
+          >
+            <div className="flex items-center">
+              <div className="relative flex h-8 w-8 items-center justify-center rounded-full">
+                <svg className="h-full w-full -rotate-90" viewBox="0 0 40 40" aria-hidden="true">
+                  <circle
+                    cx="20"
+                    cy="20"
+                    r={CIRCLE_RADIUS}
+                    className="text-zinc-100"
+                    fill="transparent"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeDasharray={CIRCLE_LENGTH}
+                    strokeDashoffset={0}
+                  />
+                  <circle
+                    cx="20"
+                    cy="20"
+                    r={CIRCLE_RADIUS}
+                    className="text-secondary transition-all duration-500 ease-out"
+                    fill="transparent"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeDasharray={CIRCLE_LENGTH}
+                    strokeDashoffset={strokeOffset}
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                className="prev-button text-primary hover:bg-primary ring-primary rounded-full p-2 shadow-md ring-1 shadow-zinc-800/5 transition duration-300 ease-in-out hover:rotate-9 hover:text-white"
+                aria-label="Előző vélemény"
+              >
+                <ArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
+              </button>
+
+              <button
+                type="button"
+                className="next-button text-primary hover:bg-primary ring-primary rounded-full p-2 shadow-md ring-1 shadow-zinc-800/5 transition duration-300 ease-in-out hover:-rotate-9 hover:text-white"
+                aria-label="Következő vélemény"
+              >
+                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
+              </button>
             </div>
           </div>
-
-          <div className={clsx('flex items-center gap-3', items.length === 2 ? 'lg:hidden' : '')}>
-            <button
-              type="button"
-              className="prev-button text-primary hover:bg-primary ring-primary rounded-full p-2 shadow-md ring-1 shadow-zinc-800/5 transition duration-300 ease-in-out hover:rotate-9 hover:text-white"
-              aria-label="Előző vélemény"
-            >
-              <ArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
-            </button>
-
-            <button
-              type="button"
-              className="next-button text-primary hover:bg-primary ring-primary rounded-full p-2 shadow-md ring-1 shadow-zinc-800/5 transition duration-300 ease-in-out hover:-rotate-9 hover:text-white"
-              aria-label="Következő vélemény"
-            >
-              <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
+        )}
       </Container>
     </section>
   )
