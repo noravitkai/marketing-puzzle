@@ -5,6 +5,7 @@ import { buildConfig } from 'payload'
 import { heroBlock } from '@/payload/blocks/hero'
 import { videoBlock } from '@/payload/blocks/video'
 import { servicesBlock } from '@/payload/blocks/services'
+import { testimonialsBlock } from '@/payload/blocks/testimonials'
 import { teamBlock } from '@/payload/blocks/team'
 
 export default buildConfig({
@@ -72,7 +73,7 @@ export default buildConfig({
           label: 'Page layout',
           type: 'blocks',
           required: true,
-          blocks: [heroBlock, videoBlock, servicesBlock, teamBlock],
+          blocks: [heroBlock, videoBlock, servicesBlock, teamBlock, testimonialsBlock],
         },
         {
           name: 'content',

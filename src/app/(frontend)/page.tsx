@@ -2,6 +2,7 @@ import Hero from '@/components/home/Hero'
 import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
 import Team, { TeamMember } from '@/components/home/Team'
+import Testimonials, { Testimonial } from '@/components/home/Testimonials'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type HeroCardFromPayload = {
@@ -92,6 +93,22 @@ type TeamBlockFromPayload = {
   members?: TeamMemberFromPayload[]
 }
 
+type TestimonialFromPayload = {
+  id: string
+  quote: string
+  author: string
+  company?: string | null
+}
+
+type TestimonialsBlockFromPayload = {
+  id: string
+  blockType: 'testimonials'
+  heading: string
+  lead?: string | null
+  description?: string | null
+  items?: TestimonialFromPayload[]
+  }
+
 type PageFromPayload = {
   id: string
   title: string
@@ -101,6 +118,7 @@ type PageFromPayload = {
     | VideoBlockFromPayload
     | ServicesBlockFromPayload
     | TeamBlockFromPayload
+    | TestimonialsBlockFromPayload
   )[]
 }
 
@@ -204,6 +222,28 @@ export default async function HomePage() {
                 description={teamBlock.description ?? undefined}
                 members={members}
               />
+            )
+          }
+            
+                      case 'testimonials': {
+            const testimonialsBlock = block as TestimonialsBlockFromPayload
+
+            const items: Testimonial[] =
+              testimonialsBlock.items?.map((item) => ({
+                id: item.id,
+                quote: item.quote,
+                author: item.author,
+                company: item.company ?? undefined,
+              })) ?? []
+
+            return (
+              <Testimonials
+                key={testimonialsBlock.id}
+                heading={testimonialsBlock.heading}
+                lead={testimonialsBlock.lead ?? undefined}
+                description={testimonialsBlock.description ?? undefined}
+                items={items}
+                              />
             )
           }
 
