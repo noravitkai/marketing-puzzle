@@ -187,6 +187,28 @@ function DesktopNavigation(props: React.ComponentPropsWithoutRef<'nav'>) {
   )
 }
 
+function LanguageToggle({ className }: { className?: string }) {
+  const [lang, setLang] = React.useState<'EN' | 'HU'>('EN')
+
+  const handleClick = () => {
+    setLang((prev) => (prev === 'EN' ? 'HU' : 'EN'))
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      className={clsx(
+        'font-secondary text-primary rounded-full bg-white/90 px-4 py-2 text-sm font-black shadow-lg ring-1 ring-zinc-900/5 backdrop-blur-sm',
+        className,
+      )}
+      aria-label={`Nyelv váltása (jelenleg: ${lang}) – csak demo, még nem kapcsol nyelvet`}
+    >
+      {lang}
+    </button>
+  )
+}
+
 export function Header() {
   const showHeader = useHideOnScroll()
 
@@ -201,8 +223,14 @@ export function Header() {
               : 'pointer-events-none -translate-y-4 opacity-0',
           )}
         >
-          <MobileNavigation className="md:hidden" />
-          <DesktopNavigation className="hidden md:block" />
+          <div className="flex items-center gap-2 md:hidden">
+            <MobileNavigation />
+            <LanguageToggle />
+          </div>
+          <div className="hidden items-center gap-2 md:flex">
+            <DesktopNavigation />
+            <LanguageToggle />
+          </div>
         </div>
       </Container>
     </header>
