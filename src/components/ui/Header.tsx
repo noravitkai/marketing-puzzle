@@ -18,6 +18,17 @@ const NAV_ITEMS = [
   { href: '/blog', label: 'Blog' },
 ]
 
+const SCROLL_DELTA = 5
+
+const GLOW_BASE_CLASSES =
+  'bg-primary/30 hidden h-6 w-14 rounded-full blur-lg transition duration-500 ease-in-out md:block'
+
+function glowStateClasses(active: boolean) {
+  return active
+    ? 'scale-100 opacity-100'
+    : 'scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100'
+}
+
 function useBodyScrollLock(locked: boolean) {
   React.useEffect(() => {
     if (!locked || typeof document === 'undefined') return
@@ -36,14 +47,13 @@ function useHideOnScroll() {
   const lastScrollY = React.useRef(0)
 
   React.useEffect(() => {
+    if (typeof window === 'undefined') return
     lastScrollY.current = window.scrollY
-    const DELTA = 5
-
     function onScroll() {
       const current = window.scrollY
       const diff = current - lastScrollY.current
 
-      if (Math.abs(diff) >= DELTA) {
+      if (Math.abs(diff) >= SCROLL_DELTA) {
         setVisible(diff <= 0)
         lastScrollY.current = current
       }
@@ -119,7 +129,6 @@ function MobileNavigation(props: React.ComponentPropsWithoutRef<typeof Popover>)
                   </PopoverButton>
                   <h2 className="text-sm font-medium text-zinc-600">Menü</h2>
                 </div>
-
                 <nav className="mt-6">
                   <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800">
                     {NAV_ITEMS.map((item) => (
@@ -147,11 +156,18 @@ function NavItem({ href, children }: { href: string; children: React.ReactNode }
       <Link
         href={href}
         className={clsx(
-          'relative block px-3 py-2 transition',
+          'group relative block px-3 py-2 transition-colors',
           isActive ? 'text-primary' : 'hover:text-primary',
         )}
       >
-        {children}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 flex items-center justify-center"
+        >
+          <span className={clsx(GLOW_BASE_CLASSES, glowStateClasses(isActive))} />
+        </span>
+        <span className="relative z-10">{children}</span>
+
         {isActive && (
           <span className="from-primary-500/0 via-primary-500/40 to-primary-500/0 absolute inset-x-1 -bottom-px h-px bg-linear-to-r" />
         )}
@@ -163,7 +179,7 @@ function NavItem({ href, children }: { href: string; children: React.ReactNode }
 function DesktopNavigation(props: React.ComponentPropsWithoutRef<'nav'>) {
   return (
     <nav {...props}>
-      <ul className="flex items-center gap-3 rounded-full bg-white/90 px-4 text-sm font-medium text-zinc-800 shadow-lg ring-1 ring-zinc-900/5 backdrop-blur-sm">
+      <ul className="flex items-center gap-3 overflow-hidden rounded-full bg-white/90 px-4 text-sm font-medium text-zinc-800 shadow-lg ring-1 ring-zinc-900/5 backdrop-blur-sm">
         <li>
           <Link href="/" aria-label="Marketing Puzzle - vissza a főoldalra">
             <Image
@@ -176,7 +192,6 @@ function DesktopNavigation(props: React.ComponentPropsWithoutRef<'nav'>) {
             />
           </Link>
         </li>
-
         {NAV_ITEMS.map((item) => (
           <NavItem key={item.href} href={item.href}>
             {item.label}
@@ -199,12 +214,18 @@ function LanguageToggle({ className }: { className?: string }) {
       type="button"
       onClick={handleClick}
       className={clsx(
-        'font-secondary text-primary rounded-full bg-white/90 px-4 py-2 text-sm font-black shadow-lg ring-1 ring-zinc-900/5 backdrop-blur-sm',
+        'group font-secondary text-primary relative overflow-hidden rounded-full bg-white/90 px-4 py-2 text-sm font-black shadow-lg ring-1 ring-zinc-900/5 backdrop-blur-sm transition-colors',
         className,
       )}
       aria-label={`Nyelv váltása (jelenleg: ${lang}) – csak demo, még nem kapcsol nyelvet`}
     >
-      {lang}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 flex items-center justify-center"
+      >
+        <span className={clsx(GLOW_BASE_CLASSES, glowStateClasses(false))} />
+      </span>
+      <span className="relative z-10">{lang}</span>
     </button>
   )
 }
