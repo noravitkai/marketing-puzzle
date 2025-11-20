@@ -148,6 +148,16 @@ type FormBlockFromPayload = {
   serviceHint?: string | null
   servicePlaceholder?: string | null
   serviceOptions?: FormServiceOptionFromPayload[]
+  messageLabel: string
+  messageHint?: string | null
+  messagePlaceholder?: string | null
+  toggleLabel: string
+  toggleDescription?: string | null
+  toggleFile?: {
+    id: string
+    url?: string | null
+    alt?: string | null
+  } | null
 }
 
 type PageFromPayload = {
@@ -322,6 +332,12 @@ export default async function HomePage() {
                 serviceHint={formBlock.serviceHint ?? undefined}
                 servicePlaceholder={formBlock.servicePlaceholder ?? undefined}
                 serviceOptions={formBlock.serviceOptions ?? []}
+                messageLabel={formBlock.messageLabel}
+                messageHint={formBlock.messageHint ?? undefined}
+                messagePlaceholder={formBlock.messagePlaceholder ?? undefined}
+                toggleLabel={formBlock.toggleLabel}
+                toggleDescription={formBlock.toggleDescription ?? undefined}
+                toggleFileUrl={formBlock.toggleFile?.url ?? undefined}
               />
             )
           }

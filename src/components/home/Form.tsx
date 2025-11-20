@@ -9,8 +9,9 @@ import {
   BriefcaseIcon,
   GlobeAltIcon,
   RectangleGroupIcon,
+  ChatBubbleLeftEllipsisIcon,
 } from '@heroicons/react/24/outline'
-import { InputGroup, SelectGroup } from '@/components/ui/Form'
+import { InputGroup, SelectGroup, TextareaGroup, ToggleGroup } from '@/components/ui/Form'
 
 type ServiceOption = {
   value: string
@@ -45,6 +46,12 @@ type FormProps = {
   serviceHint?: string
   servicePlaceholder?: string
   serviceOptions: ServiceOption[]
+  messageLabel: string
+  messageHint?: string
+  messagePlaceholder?: string
+  toggleLabel: string
+  toggleDescription?: string
+  toggleFileUrl?: string
 }
 
 export default function Form({
@@ -75,6 +82,12 @@ export default function Form({
   serviceHint,
   servicePlaceholder,
   serviceOptions,
+  messageLabel,
+  messageHint,
+  messagePlaceholder,
+  toggleLabel,
+  toggleDescription,
+  toggleFileUrl,
 }: FormProps) {
   const hasImage = Boolean(imageUrl)
 
@@ -175,6 +188,27 @@ export default function Form({
                       leadingIcon={<RectangleGroupIcon className="h-4 w-4" />}
                       multiple
                       required
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <TextareaGroup
+                      id="message"
+                      name="message"
+                      label={messageLabel}
+                      hint={messageHint}
+                      placeholder={messagePlaceholder}
+                      leadingIcon={<ChatBubbleLeftEllipsisIcon className="h-4 w-4" />}
+                      required
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <ToggleGroup
+                      id="toggle"
+                      name="toggle"
+                      label={toggleLabel}
+                      description={toggleDescription}
+                      labelHref={toggleFileUrl}
+                      defaultChecked
                     />
                   </div>
                 </div>

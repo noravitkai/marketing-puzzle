@@ -2,7 +2,12 @@
 
 import * as React from 'react'
 import clsx from 'clsx'
-import { ChevronDownIcon, CheckIcon } from '@heroicons/react/16/solid'
+import {
+  ChevronDownIcon,
+  CheckIcon,
+  XMarkIcon,
+  ArrowDownTrayIcon,
+} from '@heroicons/react/24/outline'
 import { Listbox, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 
@@ -38,6 +43,57 @@ export function InputGroup({ id, label, hint, leadingIcon, className, ...props }
         <input
           id={id}
           className={clsx(baseInputClasses, leadingIcon ? 'pl-10' : 'pl-3', 'pr-3', className)}
+          {...props}
+        />
+      </div>
+    </div>
+  )
+}
+
+export type TextareaGroupProps = {
+  id: string
+  label: string
+  hint?: string
+  leadingIcon?: React.ReactNode
+  className?: string
+} & React.TextareaHTMLAttributes<HTMLTextAreaElement>
+
+export function TextareaGroup({
+  id,
+  label,
+  hint,
+  leadingIcon,
+  className,
+  rows = 4,
+  ...props
+}: TextareaGroupProps) {
+  const baseTextareaClasses = clsx(
+    baseFieldClasses,
+    'placeholder:text-zinc-400 placeholder:text-xs',
+    'resize-y min-h-[6rem]',
+  )
+
+  return (
+    <div className="space-y-1">
+      <div className="relative">
+        <label htmlFor={id} className={floatingLabelClasses}>
+          <span className="uppercase">{label}</span>
+          {hint ? <span className="font-normal text-zinc-500 normal-case">{hint}</span> : null}
+        </label>
+        {leadingIcon ? (
+          <span className="pointer-events-none absolute top-3 left-3 flex items-center text-zinc-400">
+            {leadingIcon}
+          </span>
+        ) : null}
+        <textarea
+          id={id}
+          rows={rows}
+          className={clsx(
+            baseTextareaClasses,
+            leadingIcon ? 'pl-10' : 'pl-3',
+            'pt-2.5 pr-3 pb-2.5',
+            className,
+          )}
           {...props}
         />
       </div>
@@ -205,6 +261,82 @@ export function SelectGroup({
             </>
           )}
         </Listbox>
+      </div>
+    </div>
+  )
+}
+
+export type ToggleGroupProps = {
+  id: string
+  name: string
+  label: string
+  description?: string
+  labelHref?: string
+  className?: string
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'id' | 'name' | 'className'>
+
+export function ToggleGroup({
+  id,
+  name,
+  label,
+  description,
+  labelHref,
+  className,
+  ...props
+}: ToggleGroupProps) {
+  return (
+    <div className={clsx('flex items-center justify-between gap-4', className)}>
+      <span className="flex grow flex-col">
+        <label
+          htmlFor={id}
+          className="text-xs font-medium tracking-tighter text-zinc-800 uppercase"
+        >
+          {label}
+        </label>
+        {description ? (
+          <span
+            id={`${id}-description`}
+            className="mt-0.5 flex items-start gap-1.5 text-xs text-zinc-500"
+          >
+            {labelHref ? (
+              <a
+                href={labelHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex flex-none items-start justify-center"
+                aria-label="Letöltés"
+              >
+                <ArrowDownTrayIcon className="hover:text-primary h-4 w-4 flex-none text-zinc-400 transition duration-300 ease-in-out" />
+              </a>
+            ) : null}
+            <span className="flex-1">{description}</span>
+          </span>
+        ) : null}
+      </span>
+      <div className="group outline-primary has-checked:bg-primary relative inline-flex w-9 shrink-0 rounded-full bg-zinc-200 p-0.5 outline-offset-2 transition-colors duration-200 ease-in-out has-focus-visible:outline-2">
+        <span className="relative h-4 w-4 rounded-full bg-white shadow-sm ring-1 ring-zinc-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-4">
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 flex h-full w-full items-center justify-center opacity-100 transition-opacity duration-200 ease-in group-has-checked:opacity-0 group-has-checked:duration-100 group-has-checked:ease-out"
+          >
+            <XMarkIcon className="h-3 w-3 text-zinc-400" />
+          </span>
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 flex h-full w-full items-center justify-center opacity-0 transition-opacity duration-100 ease-out group-has-checked:opacity-100 group-has-checked:duration-200 group-has-checked:ease-in"
+          >
+            <CheckIcon className="text-primary h-3 w-3" />
+          </span>
+        </span>
+        <input
+          id={id}
+          name={name}
+          type="checkbox"
+          aria-label={label}
+          aria-describedby={description ? `${id}-description` : undefined}
+          className="absolute inset-0 cursor-pointer appearance-none focus:outline-none"
+          {...props}
+        />
       </div>
     </div>
   )
