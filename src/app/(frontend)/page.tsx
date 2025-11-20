@@ -158,6 +158,8 @@ type FormBlockFromPayload = {
     url?: string | null
     alt?: string | null
   } | null
+  submitLabel: string
+  endpoint: string
 }
 
 type PageFromPayload = {
@@ -338,6 +340,8 @@ export default async function HomePage() {
                 toggleLabel={formBlock.toggleLabel}
                 toggleDescription={formBlock.toggleDescription ?? undefined}
                 toggleFileUrl={formBlock.toggleFile?.url ?? undefined}
+                submitLabel={formBlock.submitLabel}
+                endpoint={formBlock.endpoint}
               />
             )
           }

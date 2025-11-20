@@ -23,9 +23,18 @@ export type InputGroupProps = {
   hint?: string
   leadingIcon?: React.ReactNode
   className?: string
+  error?: string
 } & React.InputHTMLAttributes<HTMLInputElement>
 
-export function InputGroup({ id, label, hint, leadingIcon, className, ...props }: InputGroupProps) {
+export function InputGroup({
+  id,
+  label,
+  hint,
+  leadingIcon,
+  className,
+  error,
+  ...props
+}: InputGroupProps) {
   const baseInputClasses = clsx(baseFieldClasses, 'placeholder:text-zinc-400 placeholder:text-xs')
 
   return (
@@ -46,6 +55,7 @@ export function InputGroup({ id, label, hint, leadingIcon, className, ...props }
           {...props}
         />
       </div>
+      {error ? <p className="text-xs text-red-700">{error}</p> : null}
     </div>
   )
 }
@@ -56,6 +66,7 @@ export type TextareaGroupProps = {
   hint?: string
   leadingIcon?: React.ReactNode
   className?: string
+  error?: string
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>
 
 export function TextareaGroup({
@@ -65,6 +76,7 @@ export function TextareaGroup({
   leadingIcon,
   className,
   rows = 4,
+  error,
   ...props
 }: TextareaGroupProps) {
   const baseTextareaClasses = clsx(
@@ -97,6 +109,7 @@ export function TextareaGroup({
           {...props}
         />
       </div>
+      {error ? <p className="text-xs text-red-700">{error}</p> : null}
     </div>
   )
 }
@@ -119,6 +132,7 @@ export type SelectGroupProps = {
   disabled?: boolean
   required?: boolean
   multiple?: boolean
+  error?: string
 }
 
 export function SelectGroup({
@@ -134,6 +148,7 @@ export function SelectGroup({
   disabled,
   required,
   multiple = false,
+  error,
 }: SelectGroupProps) {
   const [value, setValue] = React.useState<string | string[]>(() => {
     if (multiple) {
@@ -169,6 +184,14 @@ export function SelectGroup({
     displayLabel = selectedOption?.label ?? placeholder
     isPlaceholder = !selectedOption
   }
+
+  const selectedValues = React.useMemo(() => {
+    if (multiple) {
+      return Array.isArray(value) ? value : value ? [value] : []
+    }
+    const v = Array.isArray(value) ? (value[0] ?? '') : value
+    return v ? [v] : []
+  }, [multiple, value])
 
   return (
     <div className="space-y-1">
@@ -261,7 +284,11 @@ export function SelectGroup({
             </>
           )}
         </Listbox>
+        {selectedValues.map((v, index) => (
+          <input key={index} type="hidden" name={name} value={v} />
+        ))}
       </div>
+      {error ? <p className="text-xs text-red-700">{error}</p> : null}
     </div>
   )
 }

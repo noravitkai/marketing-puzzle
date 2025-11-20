@@ -238,5 +238,18 @@ export const formBlock: Block = {
       relationTo: 'media',
       required: false,
     },
+    {
+      name: 'endpoint',
+      label: 'Űrlap beküldési URL',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'submitLabel',
+      label: 'Küldés gomb felirata',
+      type: 'text',
+      required: true,
+      defaultValue: 'Küldés',
+    },
   ],
 }
