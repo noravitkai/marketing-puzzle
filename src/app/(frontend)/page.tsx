@@ -3,6 +3,7 @@ import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
 import Team, { TeamMember } from '@/components/home/Team'
 import Testimonials, { Testimonial } from '@/components/home/Testimonials'
+import Form from '@/components/home/Form'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type HeroCardFromPayload = {
@@ -107,7 +108,47 @@ type TestimonialsBlockFromPayload = {
   lead?: string | null
   description?: string | null
   items?: TestimonialFromPayload[]
-  }
+}
+
+type FormServiceOptionFromPayload = {
+  value: string
+  label: string
+}
+
+type FormBlockFromPayload = {
+  id: string
+  blockType: 'form'
+  heading: string
+  lead?: string | null
+  description?: string | null
+  image?: {
+    id: string
+    url?: string | null
+    alt?: string | null
+  } | null
+  lastNameLabel: string
+  lastNameHint?: string | null
+  lastNamePlaceholder?: string | null
+  firstNameLabel: string
+  firstNameHint?: string | null
+  firstNamePlaceholder?: string | null
+  emailLabel: string
+  emailHint?: string | null
+  emailPlaceholder?: string | null
+  phoneLabel: string
+  phoneHint?: string | null
+  phonePlaceholder?: string | null
+  companyLabel: string
+  companyHint?: string | null
+  companyPlaceholder?: string | null
+  websiteLabel: string
+  websiteHint?: string | null
+  websitePlaceholder?: string | null
+  serviceLabel: string
+  serviceHint?: string | null
+  servicePlaceholder?: string | null
+  serviceOptions?: FormServiceOptionFromPayload[]
+}
 
 type PageFromPayload = {
   id: string
@@ -119,6 +160,7 @@ type PageFromPayload = {
     | ServicesBlockFromPayload
     | TeamBlockFromPayload
     | TestimonialsBlockFromPayload
+    | FormBlockFromPayload
   )[]
 }
 
@@ -224,8 +266,8 @@ export default async function HomePage() {
               />
             )
           }
-            
-                      case 'testimonials': {
+
+          case 'testimonials': {
             const testimonialsBlock = block as TestimonialsBlockFromPayload
 
             const items: Testimonial[] =
@@ -243,7 +285,44 @@ export default async function HomePage() {
                 lead={testimonialsBlock.lead ?? undefined}
                 description={testimonialsBlock.description ?? undefined}
                 items={items}
-                              />
+              />
+            )
+          }
+
+          case 'form': {
+            const formBlock = block as FormBlockFromPayload
+
+            return (
+              <Form
+                key={formBlock.id}
+                heading={formBlock.heading}
+                lead={formBlock.lead ?? undefined}
+                description={formBlock.description ?? undefined}
+                imageUrl={formBlock.image?.url ?? undefined}
+                imageAlt={formBlock.image?.alt ?? undefined}
+                lastNameLabel={formBlock.lastNameLabel}
+                lastNameHint={formBlock.lastNameHint ?? undefined}
+                lastNamePlaceholder={formBlock.lastNamePlaceholder ?? undefined}
+                firstNameLabel={formBlock.firstNameLabel}
+                firstNameHint={formBlock.firstNameHint ?? undefined}
+                firstNamePlaceholder={formBlock.firstNamePlaceholder ?? undefined}
+                emailLabel={formBlock.emailLabel}
+                emailHint={formBlock.emailHint ?? undefined}
+                emailPlaceholder={formBlock.emailPlaceholder ?? undefined}
+                phoneLabel={formBlock.phoneLabel}
+                phoneHint={formBlock.phoneHint ?? undefined}
+                phonePlaceholder={formBlock.phonePlaceholder ?? undefined}
+                companyLabel={formBlock.companyLabel}
+                companyHint={formBlock.companyHint ?? undefined}
+                companyPlaceholder={formBlock.companyPlaceholder ?? undefined}
+                websiteLabel={formBlock.websiteLabel}
+                websiteHint={formBlock.websiteHint ?? undefined}
+                websitePlaceholder={formBlock.websitePlaceholder ?? undefined}
+                serviceLabel={formBlock.serviceLabel}
+                serviceHint={formBlock.serviceHint ?? undefined}
+                servicePlaceholder={formBlock.servicePlaceholder ?? undefined}
+                serviceOptions={formBlock.serviceOptions ?? []}
+              />
             )
           }
 

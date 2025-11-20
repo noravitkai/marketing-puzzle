@@ -88,7 +88,7 @@ export default function Testimonials({ heading, lead, description, items }: Test
   const showControls = items.length > 1
 
   return (
-    <section id="testimonials-section" ref={sectionRef as React.RefObject<HTMLElement>}>
+    <section id="vélemények" ref={sectionRef as React.RefObject<HTMLElement>}>
       <Container className="mt-16 sm:mt-24">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="flex flex-col items-center gap-6 text-center">
