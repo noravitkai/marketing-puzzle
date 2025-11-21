@@ -3,7 +3,7 @@ import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
 import Team, { TeamMember } from '@/components/home/Team'
 import Testimonials, { Testimonial } from '@/components/home/Testimonials'
-import Form from '@/components/home/Form'
+import ContactSection from '@/components/home/Contact'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type HeroCardFromPayload = {
@@ -305,7 +305,7 @@ export default async function HomePage() {
             const formBlock = block as FormBlockFromPayload
 
             return (
-              <Form
+              <ContactSection
                 key={formBlock.id}
                 heading={formBlock.heading}
                 lead={formBlock.lead ?? undefined}

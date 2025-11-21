@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import React, { Fragment } from 'react'
 import clsx from 'clsx'
 import {
   ChevronDownIcon,
@@ -9,7 +9,6 @@ import {
   ArrowDownTrayIcon,
 } from '@heroicons/react/24/outline'
 import { Listbox, Transition } from '@headlessui/react'
-import { Fragment } from 'react'
 
 const baseFieldClasses =
   'focus:outline-none focus:ring-1 focus:ring-primary block w-full rounded-md py-2 px-3 text-xs sm:text-sm text-zinc-800 bg-white ring-1 ring-zinc-900/10 shadow-sm shadow-zinc-800/5 disabled:cursor-not-allowed disabled:opacity-50'
