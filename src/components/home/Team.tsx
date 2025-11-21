@@ -50,7 +50,7 @@ export default function Team({ heading, lead, description, members }: TeamProps)
   const tiltVariants = ['rotate-0', 'rotate-1', '-rotate-1', 'rotate-1', 'rotate-0', '-rotate-1']
 
   return (
-    <section id="team">
+    <section id="csapat">
       <Container className="mt-16 sm:mt-20">
         <div className="flex flex-col items-center gap-6 text-center">
           <Heading as="h2">{heading}</Heading>
