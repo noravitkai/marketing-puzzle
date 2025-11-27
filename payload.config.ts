@@ -8,6 +8,8 @@ import { servicesBlock } from '@/payload/blocks/services'
 import { teamBlock } from '@/payload/blocks/team'
 import { testimonialsBlock } from '@/payload/blocks/testimonials'
 import { formBlock } from '@/payload/blocks/form'
+import { projectsBlock } from '@/payload/blocks/projects'
+import { projectsCollection } from '@/payload/collections/projects'
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
@@ -74,7 +76,15 @@ export default buildConfig({
           label: 'Page layout',
           type: 'blocks',
           required: true,
-          blocks: [heroBlock, videoBlock, servicesBlock, teamBlock, testimonialsBlock, formBlock],
+          blocks: [
+            heroBlock,
+            videoBlock,
+            servicesBlock,
+            teamBlock,
+            testimonialsBlock,
+            formBlock,
+            projectsBlock,
+          ],
         },
         {
           name: 'content',
@@ -82,6 +92,7 @@ export default buildConfig({
         },
       ],
     },
+    projectsCollection,
   ],
 
   db: sqliteAdapter({
