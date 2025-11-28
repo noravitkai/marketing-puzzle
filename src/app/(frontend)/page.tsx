@@ -4,7 +4,7 @@ import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
 import Team, { TeamMember } from '@/components/home/Team'
 import Testimonials, { Testimonial } from '@/components/home/Testimonials'
-import References from '@/components/home/References'
+import References from '@/components/home/Cta'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type HeroCardFromPayload = {
@@ -111,6 +111,34 @@ type TestimonialsBlockFromPayload = {
   items?: TestimonialFromPayload[]
 }
 
+type CtaBlockFromPayload = {
+  id: string
+  blockType: 'cta'
+  showHeader?: boolean | null
+  heading?: string | null
+  lead?: string | null
+  description?: any | null
+  cta: {
+    heading: string
+    body?: any | null
+    primaryAction?: {
+      label?: string | null
+      href?: string | null
+    } | null
+    secondaryAction?: {
+      label?: string | null
+      href?: string | null
+    } | null
+    images: {
+      image?: {
+        url?: string | null
+        alt?: string | null
+      } | null
+      alt?: string | null
+    }[]
+  }
+}
+
 type PageFromPayload = {
   id: string
   title: string
@@ -121,6 +149,7 @@ type PageFromPayload = {
     | ServicesBlockFromPayload
     | TeamBlockFromPayload
     | TestimonialsBlockFromPayload
+    | CtaBlockFromPayload
   )[]
 }
 
@@ -249,11 +278,15 @@ export default async function HomePage() {
             )
           }
 
+          case 'cta': {
+            const ctaBlock = block as CtaBlockFromPayload
+            return <References key={ctaBlock.id} block={ctaBlock} />
+          }
+
           default:
             return null
         }
       })}
-      <References />
     </>
   )
 }
