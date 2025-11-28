@@ -1,8 +1,10 @@
+import * as React from 'react'
 import Hero from '@/components/home/Hero'
 import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
 import Team, { TeamMember } from '@/components/home/Team'
 import Testimonials, { Testimonial } from '@/components/home/Testimonials'
+import References from '@/components/home/References'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type HeroCardFromPayload = {
@@ -107,7 +109,7 @@ type TestimonialsBlockFromPayload = {
   lead?: string | null
   description?: string | null
   items?: TestimonialFromPayload[]
-  }
+}
 
 type PageFromPayload = {
   id: string
@@ -224,8 +226,8 @@ export default async function HomePage() {
               />
             )
           }
-            
-                      case 'testimonials': {
+
+          case 'testimonials': {
             const testimonialsBlock = block as TestimonialsBlockFromPayload
 
             const items: Testimonial[] =
@@ -243,7 +245,7 @@ export default async function HomePage() {
                 lead={testimonialsBlock.lead ?? undefined}
                 description={testimonialsBlock.description ?? undefined}
                 items={items}
-                              />
+              />
             )
           }
 
@@ -251,6 +253,7 @@ export default async function HomePage() {
             return null
         }
       })}
+      <References />
     </>
   )
 }
