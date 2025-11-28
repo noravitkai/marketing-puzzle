@@ -8,6 +8,7 @@ type CtaBlockProps = {
     id: string
     blockType: 'cta'
     showHeader?: boolean | null
+    imagePosition?: 'images-right' | 'images-left' | null
     heading?: string | null
     lead?: string | null
     description?: string | null
@@ -33,7 +34,8 @@ type CtaBlockProps = {
 }
 
 export default function CtaSection({ block }: CtaBlockProps) {
-  const { showHeader, heading, lead, description, cta } = block
+  const { showHeader, heading, lead, description, cta, imagePosition } = block
+  const resolvedImagePosition: 'images-right' | 'images-left' = imagePosition ?? 'images-right'
 
   const primaryAction = {
     label: cta.primaryAction?.label || 'Tovább',
@@ -90,6 +92,7 @@ export default function CtaSection({ block }: CtaBlockProps) {
           primaryAction={primaryAction}
           secondaryAction={secondaryAction}
           images={[images[0], images[1]]}
+          imagePosition={resolvedImagePosition}
         />
       </Container>
     </section>

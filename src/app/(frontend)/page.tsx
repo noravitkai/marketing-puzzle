@@ -115,6 +115,7 @@ type CtaBlockFromPayload = {
   id: string
   blockType: 'cta'
   showHeader?: boolean | null
+  imagePosition?: 'images-right' | 'images-left' | null
   heading?: string | null
   lead?: string | null
   description?: any | null

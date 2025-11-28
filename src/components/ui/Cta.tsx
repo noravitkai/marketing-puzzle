@@ -21,6 +21,7 @@ export type CtaProps = {
   primaryAction: CtaAction
   secondaryAction?: CtaAction
   images: [CtaImage, CtaImage]
+  imagePosition?: 'images-right' | 'images-left'
   className?: string
 }
 
@@ -30,13 +31,20 @@ export function Cta({
   primaryAction,
   secondaryAction,
   images,
+  imagePosition = 'images-right',
   className,
 }: CtaProps) {
   const [firstImage, secondImage] = images
+  const imagesLeft = imagePosition === 'images-left'
 
   return (
     <div className={clsx('mt-8 grid grid-cols-1 gap-4 md:grid-cols-2', className)}>
-      <div className="rounded-md bg-white/90 p-6 shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm md:p-8 lg:p-10">
+      <div
+        className={clsx(
+          'rounded-md bg-white/90 p-6 shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm md:p-8 lg:p-10',
+          imagesLeft ? 'md:order-2' : 'md:order-1',
+        )}
+      >
         <div className="mx-auto max-w-xl text-left">
           <h3 className="font-bold text-zinc-800 sm:text-lg md:text-xl lg:text-3xl">{heading}</h3>
           <div className="mt-4 space-y-4 text-sm leading-relaxed text-zinc-600 sm:text-base">
@@ -62,7 +70,12 @@ export function Cta({
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:grid-cols-2">
+      <div
+        className={clsx(
+          'grid grid-cols-2 gap-4 md:grid-cols-1 lg:grid-cols-2',
+          imagesLeft ? 'md:order-1' : 'md:order-2',
+        )}
+      >
         <div className="relative h-40 w-full sm:h-56 md:h-full">
           <Image
             alt={firstImage.alt}
