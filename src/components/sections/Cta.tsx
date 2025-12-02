@@ -1,5 +1,5 @@
 import { Container } from '@/components/ui/Container'
-import { Cta as CtaCard } from '@/components/ui/Cta'
+import { CtaPattern } from '@/components/ui/CtaPattern'
 import { Heading, Lead, Paragraph } from '@/components/ui/Text'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from 'lexical'
@@ -82,8 +82,7 @@ export default function CtaSection({ block }: CtaBlockProps) {
             {description && <Paragraph className="max-w-2xl">{description}</Paragraph>}
           </div>
         )}
-
-        <CtaCard
+        <CtaPattern
           className="w-full"
           heading={cta.heading}
           body={

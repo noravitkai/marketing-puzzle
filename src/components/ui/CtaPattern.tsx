@@ -1,3 +1,4 @@
+// src/components/ui/CtaPattern.tsx
 'use client'
 
 import * as React from 'react'
@@ -15,7 +16,7 @@ type CtaImage = {
   alt: string
 }
 
-export type CtaProps = {
+export type CtaPatternProps = {
   heading: string
   body: React.ReactNode
   primaryAction?: CtaAction
@@ -25,7 +26,7 @@ export type CtaProps = {
   className?: string
 }
 
-export function Cta({
+export function CtaPattern({
   heading,
   body,
   primaryAction,
@@ -33,7 +34,7 @@ export function Cta({
   images,
   imagePosition = 'images-right',
   className,
-}: CtaProps) {
+}: CtaPatternProps) {
   const [firstImage, secondImage] = images
   const imagesLeft = imagePosition === 'images-left'
   const hasPrimary = !!primaryAction && !!primaryAction.label && !!primaryAction.href
