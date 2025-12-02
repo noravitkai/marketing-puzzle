@@ -2,6 +2,7 @@ import { Container } from '@/components/ui/Container'
 import { Cta as CtaCard } from '@/components/ui/Cta'
 import { Heading, Lead, Paragraph } from '@/components/ui/Text'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import type { SerializedEditorState } from 'lexical'
 
 type CtaBlockProps = {
   block: {
@@ -14,7 +15,7 @@ type CtaBlockProps = {
     description?: string | null
     cta: {
       heading: string
-      body?: any | null
+      body?: SerializedEditorState | null
       primaryAction?: {
         label?: string | null
         href?: string | null
@@ -37,10 +38,13 @@ export default function CtaSection({ block }: CtaBlockProps) {
   const { showHeader, heading, lead, description, cta, imagePosition } = block
   const resolvedImagePosition: 'images-right' | 'images-left' = imagePosition ?? 'images-right'
 
-  const primaryAction = {
-    label: cta.primaryAction?.label || 'Tovább',
-    href: cta.primaryAction?.href || '#',
-  }
+  const primaryAction =
+    cta.primaryAction?.label && cta.primaryAction.href
+      ? {
+          label: cta.primaryAction.label,
+          href: cta.primaryAction.href,
+        }
+      : undefined
 
   const secondaryAction =
     cta.secondaryAction?.label && cta.secondaryAction.href
@@ -69,7 +73,7 @@ export default function CtaSection({ block }: CtaBlockProps) {
   }
 
   return (
-    <section id="referenciaink">
+    <section>
       <Container className="mt-16 sm:mt-20">
         {showHeader && (heading || lead || description) && (
           <div className="mb-8 flex flex-col items-center gap-4 text-center">

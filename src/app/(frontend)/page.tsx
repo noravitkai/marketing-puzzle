@@ -4,8 +4,9 @@ import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
 import Team, { TeamMember } from '@/components/home/Team'
 import Testimonials, { Testimonial } from '@/components/home/Testimonials'
-import References from '@/components/home/Cta'
+import CtaSection from '@/components/sections/Cta'
 import { getPayloadClient } from '@/payload/getPayloadClient'
+import type { SerializedEditorState } from 'lexical'
 
 type HeroCardFromPayload = {
   id: string
@@ -118,10 +119,10 @@ type CtaBlockFromPayload = {
   imagePosition?: 'images-right' | 'images-left' | null
   heading?: string | null
   lead?: string | null
-  description?: any | null
+  description?: string | null
   cta: {
     heading: string
-    body?: any | null
+    body?: SerializedEditorState | null
     primaryAction?: {
       label?: string | null
       href?: string | null
@@ -135,7 +136,6 @@ type CtaBlockFromPayload = {
         url?: string | null
         alt?: string | null
       } | null
-      alt?: string | null
     }[]
   }
 }
@@ -281,7 +281,7 @@ export default async function HomePage() {
 
           case 'cta': {
             const ctaBlock = block as CtaBlockFromPayload
-            return <References key={ctaBlock.id} block={ctaBlock} />
+            return <CtaSection key={ctaBlock.id} block={ctaBlock} />
           }
 
           default:

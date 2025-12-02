@@ -14,26 +14,6 @@ export const ctaBlock: Block = {
       defaultValue: false,
     },
     {
-      name: 'imagePosition',
-      label: 'Elrendezés',
-      type: 'select',
-      defaultValue: 'images-right',
-      options: [
-        {
-          label: 'Képek jobbra, szöveg balra',
-          value: 'images-right',
-        },
-        {
-          label: 'Képek balra, szöveg jobbra',
-          value: 'images-left',
-        },
-      ],
-      admin: {
-        description:
-          'Válaszd ki, hogy a CTA doboz melyik oldalon, és a képek melyik oldalon jelenjenek meg.',
-      },
-    },
-    {
       name: 'heading',
       label: 'Szekció címe',
       type: 'text',
@@ -58,6 +38,26 @@ export const ctaBlock: Block = {
       required: false,
       admin: {
         condition: (_, siblingData) => Boolean(siblingData.showHeader),
+      },
+    },
+    {
+      name: 'imagePosition',
+      label: 'Elrendezés',
+      type: 'select',
+      defaultValue: 'images-right',
+      options: [
+        {
+          label: 'Képek jobbra, szöveg balra',
+          value: 'images-right',
+        },
+        {
+          label: 'Képek balra, szöveg jobbra',
+          value: 'images-left',
+        },
+      ],
+      admin: {
+        description:
+          'Válaszd ki, hogy a CTA doboz melyik oldalon, és a képek melyik oldalon jelenjenek meg.',
       },
     },
     {

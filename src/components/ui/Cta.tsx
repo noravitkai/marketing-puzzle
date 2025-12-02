@@ -18,7 +18,7 @@ type CtaImage = {
 export type CtaProps = {
   heading: string
   body: React.ReactNode
-  primaryAction: CtaAction
+  primaryAction?: CtaAction
   secondaryAction?: CtaAction
   images: [CtaImage, CtaImage]
   imagePosition?: 'images-right' | 'images-left'
@@ -36,6 +36,9 @@ export function Cta({
 }: CtaProps) {
   const [firstImage, secondImage] = images
   const imagesLeft = imagePosition === 'images-left'
+  const hasPrimary = !!primaryAction && !!primaryAction.label && !!primaryAction.href
+  const hasSecondary = !!secondaryAction && !!secondaryAction.label && !!secondaryAction.href
+  const hasAnyAction = hasPrimary || hasSecondary
 
   return (
     <div className={clsx('mt-8 grid grid-cols-1 gap-4 md:grid-cols-2', className)}>
@@ -50,24 +53,32 @@ export function Cta({
           <div className="mt-4 space-y-4 text-sm leading-relaxed text-zinc-600 sm:text-base">
             {body}
           </div>
-          <div className="mt-4 flex flex-row justify-center gap-4 md:mt-8 md:flex-col md:items-stretch lg:flex-row lg:items-center lg:justify-start">
-            <div className="md:w-full lg:w-auto">
-              <Button href={primaryAction.href} variant="primary" className="md:w-full lg:w-auto">
-                {primaryAction.label}
-              </Button>
+          {hasAnyAction && (
+            <div className="mt-4 flex flex-row justify-center gap-4 md:mt-8 md:flex-col md:items-stretch lg:flex-row lg:items-center lg:justify-start">
+              {hasPrimary && primaryAction && (
+                <div className="md:w-full lg:w-auto">
+                  <Button
+                    href={primaryAction.href}
+                    variant="primary"
+                    className="md:w-full lg:w-auto"
+                  >
+                    {primaryAction.label}
+                  </Button>
+                </div>
+              )}
+              {hasSecondary && secondaryAction && (
+                <div className="md:w-full lg:w-auto">
+                  <Button
+                    href={secondaryAction.href}
+                    variant="secondary"
+                    className="md:w-full lg:w-auto"
+                  >
+                    {secondaryAction.label}
+                  </Button>
+                </div>
+              )}
             </div>
-            {secondaryAction && (
-              <div className="md:w-full lg:w-auto">
-                <Button
-                  href={secondaryAction.href}
-                  variant="secondary"
-                  className="md:w-full lg:w-auto"
-                >
-                  {secondaryAction.label}
-                </Button>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
       <div
