@@ -41,8 +41,13 @@ export default function Services({
         <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
           {services.map((service, index) => {
             const tiltClass = index % 2 === 0 ? 'hover:rotate-2' : 'hover:-rotate-2'
+
             return (
-              <PrimaryCard key={service.id} as="article" className={clsx('h-full', tiltClass)}>
+              <PrimaryCard
+                key={service.id}
+                href={service.href ?? '#'}
+                className={clsx('h-full', tiltClass)}
+              >
                 <PrimaryCard.Body>
                   {service.iconUrl && (
                     <PrimaryCard.Icon src={service.iconUrl} alt={service.iconAlt} />
@@ -50,10 +55,7 @@ export default function Services({
                   <PrimaryCard.Title>{service.title}</PrimaryCard.Title>
                   <PrimaryCard.Description>{service.description}</PrimaryCard.Description>
                 </PrimaryCard.Body>
-                <PrimaryCard.Cta
-                  href={service.href ?? '#'}
-                  trailingIcon={<ArrowRightCircleIcon className="h-5 w-5" />}
-                >
+                <PrimaryCard.Cta trailingIcon={<ArrowRightCircleIcon className="h-5 w-5" />}>
                   {ctaLabel}
                 </PrimaryCard.Cta>
               </PrimaryCard>

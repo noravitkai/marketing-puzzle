@@ -1,23 +1,21 @@
 import React from 'react'
+import Link from 'next/link'
 import clsx from 'clsx'
 import {
   CardContainer,
   CardTitle,
   CardDescription,
-  CardCta,
   type CardContainerProps,
   type CardTitleProps,
-  type CardCtaProps,
 } from './CardPrimitives'
 
-function PrimaryCardRoot<T extends React.ElementType = 'div'>(props: CardContainerProps<T>) {
-  const finalClassName = clsx(props.className, 'sm:hover:scale-105 hover:shadow-md')
+type PrimaryCardRootProps = CardContainerProps<typeof Link>
 
-  return (
-    <>
-      <CardContainer {...props} className={finalClassName} />
-    </>
-  )
+function PrimaryCardRoot(props: PrimaryCardRootProps) {
+  const { className, as: _as, ...rest } = props
+  const finalClassName = clsx('sm:hover:scale-105 hover:shadow-md', className)
+
+  return <CardContainer as={Link} {...rest} className={finalClassName} />
 }
 
 function PrimaryCardBody({ children }: { children: React.ReactNode }) {
@@ -54,11 +52,25 @@ function PrimaryCardDescription({
   return <CardDescription className={clsx('mt-3', className)}>{children}</CardDescription>
 }
 
-function PrimaryCardCta({ className, children, ...props }: CardCtaProps) {
+type PrimaryCardCtaProps = {
+  children: React.ReactNode
+  className?: string
+  leadingIcon?: React.ReactNode
+  trailingIcon?: React.ReactNode
+}
+
+function PrimaryCardCta({ className, children, leadingIcon, trailingIcon }: PrimaryCardCtaProps) {
   return (
-    <CardCta className={className} {...props}>
-      {children}
-    </CardCta>
+    <div
+      className={clsx(
+        'text-primary mt-3 inline-flex items-center gap-2 text-sm font-medium',
+        className,
+      )}
+    >
+      {leadingIcon && <span className="inline-flex">{leadingIcon}</span>}
+      <span>{children}</span>
+      {trailingIcon && <span className="inline-flex">{trailingIcon}</span>}
+    </div>
   )
 }
 

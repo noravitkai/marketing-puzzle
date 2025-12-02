@@ -6,14 +6,12 @@ export type CardContainerProps<T extends React.ElementType> = {
   as?: T
   children: React.ReactNode
   className?: string
-  hover?: boolean
 } & React.ComponentPropsWithoutRef<T>
 
 export function CardContainer<T extends React.ElementType = 'div'>({
   as,
   className,
   children,
-  hover = true,
   ...restProps
 }: CardContainerProps<T>) {
   const Component = as ?? 'div'
@@ -74,7 +72,7 @@ export function CardCta({
     <Link
       {...linkProps}
       className={clsx(
-        'clickable-parent text-primary mt-3 inline-flex items-center gap-2 text-sm font-medium',
+        'text-primary mt-3 inline-flex items-center gap-2 text-sm font-medium',
         className,
       )}
     >
