@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import clsx from 'clsx'
 import { ArrowRightCircleIcon } from '@heroicons/react/24/outline'
-import { CardContainer, CardTitle, CardDescription } from './CardPrimitives'
+import { CardContainer, CardTitle, CardDescription } from '@/components/ui/cards/CardPrimitives'
 
 export type SecondaryCardProps = {
   title: string
@@ -26,7 +26,7 @@ export function SecondaryCard({
       as={Link}
       href={href}
       aria-label={title}
-      className={clsx('group relative overflow-hidden', className)}
+      className={clsx('overflow-hidden', className)}
     >
       <div className="mb-2 flex max-w-full items-center pr-2">
         <CardTitle

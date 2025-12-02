@@ -19,7 +19,8 @@ export function CardContainer<T extends React.ElementType = 'div'>({
   return (
     <Component
       className={clsx(
-        'group flex flex-col items-start rounded-md bg-white/90 p-6 shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm transition',
+        'group relative flex flex-col items-start rounded-md bg-white/90 p-6 shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm transition',
+        'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none',
         className,
       )}
       {...restProps}

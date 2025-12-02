@@ -8,7 +8,7 @@ export type ServiceCard = {
   id: string
   title: string
   description: string
-  href?: string
+  href: string
   iconUrl?: string
   iconAlt?: string
 }
@@ -40,13 +40,12 @@ export default function Services({
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
           {services.map((service, index) => {
-            const tiltClass = index % 2 === 0 ? 'hover:rotate-2' : 'hover:-rotate-2'
-
+            const tiltClassName = index % 2 === 0 ? 'hover:rotate-2' : 'hover:-rotate-2'
             return (
               <PrimaryCard
                 key={service.id}
-                href={service.href ?? '#'}
-                className={clsx('h-full', tiltClass)}
+                href={service.href}
+                className={clsx('h-full', tiltClassName)}
               >
                 <PrimaryCard.Body>
                   {service.iconUrl && (

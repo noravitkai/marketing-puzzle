@@ -7,15 +7,14 @@ import {
   CardDescription,
   type CardContainerProps,
   type CardTitleProps,
-} from './CardPrimitives'
+} from '@/components/ui/cards/CardPrimitives'
 
-type PrimaryCardRootProps = CardContainerProps<typeof Link>
+type PrimaryCardProps = Omit<CardContainerProps<typeof Link>, 'as'>
 
-function PrimaryCardRoot(props: PrimaryCardRootProps) {
-  const { className, as: _as, ...rest } = props
-  const finalClassName = clsx('sm:hover:scale-105 hover:shadow-md', className)
-
-  return <CardContainer as={Link} {...rest} className={finalClassName} />
+function PrimaryCardRoot(props: PrimaryCardProps) {
+  const { className, ...rest } = props
+  const cardRootClassName = clsx('sm:hover:scale-105 hover:shadow-md', className)
+  return <CardContainer as={Link} {...rest} className={cardRootClassName} />
 }
 
 function PrimaryCardBody({ children }: { children: React.ReactNode }) {
