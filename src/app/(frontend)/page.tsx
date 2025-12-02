@@ -49,10 +49,10 @@ type ServiceCardFromPayload = {
   id: string
   title: string
   description: string
-  targetPage?: {
+  targetPage: {
     id: string
     slug: string
-  } | null
+  }
   icon?: {
     id: string
     url?: string | null
@@ -223,7 +223,7 @@ export default async function HomePage() {
                 id: item.id,
                 title: item.title,
                 description: item.description,
-                href: item.targetPage?.slug ? `/${item.targetPage.slug}` : undefined,
+                href: `/${item.targetPage.slug}`,
                 iconUrl: item.icon?.url ?? undefined,
                 iconAlt: item.icon?.alt ?? item.title,
               })) ?? []
