@@ -8,6 +8,7 @@ import CtaSection from '@/components/sections/Cta'
 import ContactSection from '@/components/home/Contact'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 import type { SerializedEditorState } from 'lexical'
+import { ArrowRightIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 
 type HeroCardFromPayload = {
   id: string
@@ -311,11 +312,6 @@ export default async function HomePage() {
             )
           }
 
-          case 'cta': {
-            const ctaBlock = block as CtaBlockFromPayload
-            return <CtaSection key={ctaBlock.id} block={ctaBlock} />
-          }
-
           case 'testimonials': {
             const testimonialsBlock = block as TestimonialsBlockFromPayload
 
@@ -385,7 +381,15 @@ export default async function HomePage() {
 
           case 'cta': {
             const ctaBlock = block as CtaBlockFromPayload
-            return <CtaSection key={ctaBlock.id} block={ctaBlock} />
+
+            return (
+              <CtaSection
+                key={ctaBlock.id}
+                block={ctaBlock}
+                primaryTrailingIcon={<ArrowRightIcon className="h-5 w-5" />}
+                secondaryTrailingIcon={<InformationCircleIcon className="h-5 w-5" />}
+              />
+            )
           }
 
           default:
