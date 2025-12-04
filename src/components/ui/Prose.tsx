@@ -227,7 +227,7 @@ function renderNode(node: LexicalNode, index: number): React.ReactNode {
           href={href}
           target="_blank"
           rel="noreferrer"
-          className="hover:text-primary underline transition-colors duration-300"
+          className="hover:text-primary underline decoration-1 underline-offset-4 transition-colors duration-300"
         >
           {renderChildren(node.children)}
         </a>

@@ -113,13 +113,31 @@ export const projectsCollection: CollectionConfig = {
       },
     },
     {
-      name: 'url',
-      label: 'Link',
-      type: 'text',
+      name: 'links',
+      label: 'Linkek',
+      labels: {
+        singular: 'Link',
+        plural: 'Linkek',
+      },
+      type: 'array',
       required: false,
       admin: {
         position: 'sidebar',
       },
+      fields: [
+        {
+          name: 'label',
+          label: 'Megjelenő szöveg',
+          type: 'text',
+          required: false,
+        },
+        {
+          name: 'url',
+          label: 'URL',
+          type: 'text',
+          required: true,
+        },
+      ],
     },
   ],
 }
