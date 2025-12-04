@@ -5,7 +5,8 @@ import { LinkIcon } from '@heroicons/react/24/outline'
 import { Container } from '@/components/ui/Container'
 import { Lead, Paragraph } from '@/components/ui/Text'
 import { Prose } from '@/components/ui/Prose'
-import { getDisplayUrl, type DisplayUrl } from '@/lib/url'
+import { Badge } from '@/components/ui/Badge'
+import { getDisplayUrl } from '@/lib/url'
 import { getProjectBySlug } from '@/lib/projects'
 
 type ProjectPageParams = {
@@ -31,6 +32,7 @@ type ProjectDoc = {
   client?: string | null
   year?: string | null
   links?: ProjectLink[]
+  tags?: string[] | null
   body?: any
 }
 
@@ -83,7 +85,6 @@ function ProjectDetails({ project, links }: ProjectDetailsProps) {
           )}
         </dl>
       )}
-
       {hasLinks && (
         <div className={hasDetails ? 'border-t border-zinc-100 pt-6' : ''}>
           <div className="flex flex-col gap-1">
@@ -142,11 +143,15 @@ export default async function ProjectPage({ params }: ProjectPageParams) {
   const showDetailsSection = hasDetails || links.length > 0
   const showRightColumn = imageUrl || showDetailsSection
 
+  const tags = Array.isArray(project.tags)
+    ? project.tags.filter((tag) => typeof tag === 'string' && tag.trim() !== '')
+    : []
+
   return (
     <Container className="mt-9">
       <div className="grid grid-cols-1 gap-y-6 lg:grid-cols-2">
         {showRightColumn && (
-          <aside className="order-1 space-y-6 lg:sticky lg:top-24 lg:order-2 lg:self-start lg:pl-20">
+          <aside className="order-1 space-y-6 lg:sticky lg:top-9 lg:order-2 lg:self-start lg:pl-20">
             {imageUrl && (
               <div className="max-w-xs px-2.5 lg:max-w-none">
                 <Image
@@ -155,7 +160,7 @@ export default async function ProjectPage({ params }: ProjectPageParams) {
                   width={800}
                   height={1000}
                   sizes="(min-width: 1024px) 32rem, 20rem"
-                  className="aspect-square rotate-3 rounded-md bg-white/90 object-cover shadow-sm ring-1 ring-zinc-900/5"
+                  className="aspect-square rotate-3 rounded-md bg-white/90 object-cover shadow-sm ring-1 ring-zinc-900/5 lg:mt-2"
                 />
               </div>
             )}
@@ -166,8 +171,16 @@ export default async function ProjectPage({ params }: ProjectPageParams) {
             )}
           </aside>
         )}
-
         <div className={showRightColumn ? 'order-2 lg:order-1' : 'order-1 lg:order-1'}>
+          {tags.length > 0 && (
+            <div className="mb-6 flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <Badge className="shadow-sm" key={tag}>
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )}
           <Lead as="h1">{project.title}</Lead>
           <div className="mt-6">
             {project.body ? (

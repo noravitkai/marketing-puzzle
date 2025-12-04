@@ -7,7 +7,7 @@ export const projectsCollection: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'tag', 'featured'],
+    defaultColumns: ['title', 'slug', 'client', 'featured'],
   },
   fields: [
     {
@@ -39,9 +39,10 @@ export const projectsCollection: CollectionConfig = {
       },
     },
     {
-      name: 'tag',
-      label: 'Címke',
+      name: 'tags',
+      label: 'Címkék',
       type: 'text',
+      hasMany: true,
       required: false,
       admin: {
         position: 'sidebar',
@@ -89,24 +90,6 @@ export const projectsCollection: CollectionConfig = {
       name: 'year',
       label: 'Év',
       type: 'text',
-      required: false,
-      admin: {
-        position: 'sidebar',
-      },
-    },
-    {
-      name: 'services',
-      label: 'Szolgáltatások',
-      type: 'text',
-      required: false,
-      admin: {
-        position: 'sidebar',
-      },
-    },
-    {
-      name: 'result',
-      label: 'Eredmény',
-      type: 'textarea',
       required: false,
       admin: {
         position: 'sidebar',
