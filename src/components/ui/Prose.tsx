@@ -119,13 +119,13 @@ function extractCaptionFromFields(fields: any): string {
   return firstBlock.children.map((c: any) => c.text ?? '').join('')
 }
 
-function renderNode(node: LexicalNode, index: number): React.ReactNode {
+function renderNode(node: LexicalNode, index: number, blockClassName?: string): React.ReactNode {
   switch (node.type) {
     case 'paragraph': {
       const alignClass = getAlignmentClass(node.format)
 
       return (
-        <p key={index} className={clsx(alignClass)}>
+        <p key={index} className={clsx(alignClass, blockClassName)}>
           {renderChildren(node.children)}
         </p>
       )
@@ -140,7 +140,7 @@ function renderNode(node: LexicalNode, index: number): React.ReactNode {
       const baseClasses = clsx(HEADING_BASE, sizeClasses)
 
       return (
-        <Tag key={index} className={clsx(baseClasses, alignClass)}>
+        <Tag key={index} className={clsx(baseClasses, alignClass, blockClassName)}>
           {renderChildren(node.children)}
         </Tag>
       )
@@ -152,7 +152,7 @@ function renderNode(node: LexicalNode, index: number): React.ReactNode {
 
       if (isChecklist) {
         return (
-          <ul key={index} className="list-none space-y-1">
+          <ul key={index} className={clsx('list-none space-y-1', blockClassName)}>
             {node.children?.map((item, itemIndex) => {
               const checked = Boolean(item.checked)
 
@@ -184,6 +184,7 @@ function renderNode(node: LexicalNode, index: number): React.ReactNode {
             'space-y-1 pl-5',
             'list-outside',
             isOrdered ? 'list-decimal' : 'list-disc',
+            blockClassName,
           )}
         >
           {node.children?.map((item, itemIndex) => (
@@ -201,7 +202,7 @@ function renderNode(node: LexicalNode, index: number): React.ReactNode {
       return (
         <blockquote
           key={index}
-          className={clsx('border-l-2 border-zinc-200 pl-2 italic', alignClass)}
+          className={clsx('border-l-2 border-zinc-200 pl-2 italic', alignClass, blockClassName)}
         >
           {renderChildren(node.children)}
         </blockquote>
@@ -257,7 +258,7 @@ function renderNode(node: LexicalNode, index: number): React.ReactNode {
         node.fields && typeof node.fields === 'object' ? extractCaptionFromFields(node.fields) : ''
 
       return (
-        <figure key={index}>
+        <figure key={index} className={blockClassName}>
           <div className="overflow-hidden rounded-md bg-white/90 shadow-sm ring-1 ring-zinc-900/5">
             <img src={src} alt={alt} loading="lazy" className="h-auto w-full object-cover" />
           </div>
@@ -285,12 +286,21 @@ export function Prose({ value, className }: ProseProps) {
 
   return (
     <div
-      className={clsx(
-        'max-w-none space-y-3 text-sm leading-relaxed text-zinc-600 sm:text-base',
-        className,
-      )}
+      className={clsx('max-w-none text-sm leading-relaxed text-zinc-600 sm:text-base', className)}
     >
-      {rootChildren.map((node, index) => renderNode(node, index))}
+      {rootChildren.map((node, index) => {
+        const isHeading = node.type === 'heading'
+        const isFirst = index === 0
+        const blockClassName = isHeading
+          ? isFirst
+            ? 'mt-0 mb-6'
+            : 'my-6'
+          : isFirst
+            ? 'mt-0 mb-3'
+            : 'my-3'
+
+        return renderNode(node as LexicalNode, index, blockClassName)
+      })}
     </div>
   )
 }
