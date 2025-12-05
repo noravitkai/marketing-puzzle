@@ -10,6 +10,12 @@ import { getPayloadClient } from '@/payload/getPayloadClient'
 import type { SerializedEditorState } from 'lexical'
 import { ArrowRightIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 
+type Media = {
+  id: string
+  url?: string | null
+  alt?: string | null
+}
+
 type HeroCardFromPayload = {
   id: string
   badgeText: string
@@ -19,11 +25,7 @@ type HeroCardFromPayload = {
     id: string
     slug: string
   } | null
-  image?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
+  image?: Media | null
 }
 
 type HeroBlockFromPayload = {
@@ -49,19 +51,13 @@ type VideoBlockFromPayload = {
   privacyEnhanced?: boolean | null
 }
 
-type ServiceCardFromPayload = {
+type ServiceDoc = {
   id: string
+  slug: string
   title: string
-  description: string
-  targetPage?: {
-    id: string
-    slug: string
-  } | null
-  icon?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
+  excerpt: string
+  featured?: boolean
+  icon?: Media | null
 }
 
 type ServicesBlockFromPayload = {
@@ -71,7 +67,25 @@ type ServicesBlockFromPayload = {
   lead?: string | null
   description?: string | null
   ctaLabel: string
-  items?: ServiceCardFromPayload[]
+  mode?: 'all' | 'featured' | 'manual'
+  services?: ServiceDoc[]
+}
+
+function normalizeService(service: ServiceDoc): ServiceCard {
+  const icon = service.icon
+  const iconUrl =
+    icon && typeof icon === 'object' && 'url' in icon && icon.url ? icon.url : undefined
+  const iconAlt =
+    icon && typeof icon === 'object' && 'alt' in icon && icon.alt ? icon.alt : service.title
+
+  return {
+    id: service.id,
+    title: service.title,
+    description: service.excerpt,
+    href: `/szolgaltatasok/${service.slug}`,
+    iconUrl,
+    iconAlt,
+  }
 }
 
 type TeamMemberFromPayload = {
@@ -82,11 +96,7 @@ type TeamMemberFromPayload = {
     id: string
     label: string
   }[]
-  photo?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
+  photo?: Media | null
 }
 
 type TeamBlockFromPayload = {
@@ -153,11 +163,7 @@ type FormBlockFromPayload = {
   heading: string
   lead?: string | null
   description?: string | null
-  image?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
+  image?: Media | null
   lastNameLabel: string
   lastNameHint?: string | null
   lastNamePlaceholder?: string | null
@@ -185,11 +191,7 @@ type FormBlockFromPayload = {
   messagePlaceholder?: string | null
   toggleLabel: string
   toggleDescription?: string | null
-  toggleFile?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
+  toggleFile?: Media | null
   submitLabel: string
   endpoint: string
 }
@@ -226,6 +228,37 @@ export default async function HomePage() {
   const docs = result.docs as PageFromPayload[]
   const [page] = docs
 
+  let servicesCards: ServiceCard[] = []
+
+  const servicesLayoutBlock = page.layout.find((block) => block.blockType === 'services') as
+    | ServicesBlockFromPayload
+    | undefined
+
+  if (servicesLayoutBlock) {
+    let serviceDocs: ServiceDoc[] = []
+
+    if (servicesLayoutBlock.mode === 'manual' && servicesLayoutBlock.services?.length) {
+      serviceDocs = servicesLayoutBlock.services as ServiceDoc[]
+    } else {
+      const where: Record<string, any> = {}
+
+      if (servicesLayoutBlock.mode === 'featured') {
+        where.featured = { equals: true }
+      }
+
+      const { docs: fetchedServices } = await payload.find({
+        collection: 'services',
+        depth: 1,
+        sort: '-createdAt',
+        ...(Object.keys(where).length ? { where } : {}),
+      })
+
+      serviceDocs = fetchedServices as ServiceDoc[]
+    }
+
+    servicesCards = serviceDocs.map(normalizeService)
+  }
+
   return (
     <>
       {page.layout.map((block) => {
@@ -251,16 +284,6 @@ export default async function HomePage() {
           case 'services': {
             const servicesBlock = block as ServicesBlockFromPayload
 
-            const services: ServiceCard[] =
-              servicesBlock.items?.map((item) => ({
-                id: item.id,
-                title: item.title,
-                description: item.description,
-                href: item.targetPage?.slug ? `/${item.targetPage.slug}` : undefined,
-                iconUrl: item.icon?.url ?? undefined,
-                iconAlt: item.icon?.alt ?? item.title,
-              })) ?? []
-
             return (
               <Services
                 key={servicesBlock.id}
@@ -268,7 +291,7 @@ export default async function HomePage() {
                 lead={servicesBlock.lead ?? undefined}
                 description={servicesBlock.description ?? undefined}
                 ctaLabel={servicesBlock.ctaLabel}
-                services={services}
+                services={servicesCards}
               />
             )
           }

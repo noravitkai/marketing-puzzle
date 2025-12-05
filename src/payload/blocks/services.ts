@@ -32,42 +32,34 @@ export const servicesBlock: Block = {
       required: true,
     },
     {
-      name: 'items',
-      label: 'Szolgáltatások',
-      labels: {
-        singular: 'Szolgáltatás',
-        plural: 'Szolgáltatások',
-      },
-      type: 'array',
-      minRows: 1,
-      fields: [
+      name: 'mode',
+      label: 'Megjelenítendő szolgáltatások',
+      type: 'select',
+      defaultValue: 'all',
+      options: [
         {
-          name: 'title',
-          label: 'Cím',
-          type: 'text',
-          required: true,
+          label: 'Összes',
+          value: 'all',
         },
         {
-          name: 'description',
-          label: 'Leírás',
-          type: 'textarea',
-          required: true,
+          label: 'Kiemelt',
+          value: 'featured',
         },
         {
-          name: 'targetPage',
-          label: 'Kapcsolódó oldal',
-          type: 'relationship',
-          relationTo: 'pages',
-          required: false,
-        },
-        {
-          name: 'icon',
-          label: 'Ikon vagy illusztráció (SVG)',
-          type: 'upload',
-          relationTo: 'media',
-          required: true,
+          label: 'Választott',
+          value: 'manual',
         },
       ],
+    },
+    {
+      name: 'services',
+      label: 'Szolgáltatások',
+      type: 'relationship',
+      relationTo: 'services',
+      hasMany: true,
+      admin: {
+        condition: (_, siblingData) => siblingData.mode === 'manual',
+      },
     },
   ],
 }

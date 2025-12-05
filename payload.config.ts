@@ -11,6 +11,7 @@ import { testimonialsBlock } from '@/payload/blocks/testimonials'
 import { formBlock } from '@/payload/blocks/form'
 import { projectsBlock } from '@/payload/blocks/projects'
 import { projectsCollection } from '@/payload/collections/projects'
+import { servicesCollection } from '@/payload/collections/services'
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
@@ -95,6 +96,7 @@ export default buildConfig({
       ],
     },
     projectsCollection,
+    servicesCollection,
   ],
 
   db: sqliteAdapter({
