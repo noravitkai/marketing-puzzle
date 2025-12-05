@@ -1,10 +1,14 @@
+import * as React from 'react'
 import Hero from '@/components/home/Hero'
 import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
 import Team, { TeamMember } from '@/components/home/Team'
 import Testimonials, { Testimonial } from '@/components/home/Testimonials'
+import CtaSection from '@/components/sections/Cta'
 import ContactSection from '@/components/home/Contact'
 import { getPayloadClient } from '@/payload/getPayloadClient'
+import type { SerializedEditorState } from 'lexical'
+import { ArrowRightIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 
 type HeroCardFromPayload = {
   id: string
@@ -94,6 +98,34 @@ type TeamBlockFromPayload = {
   members?: TeamMemberFromPayload[]
 }
 
+type CtaBlockFromPayload = {
+  id: string
+  blockType: 'cta'
+  showHeader?: boolean | null
+  imagePosition?: 'images-right' | 'images-left' | null
+  heading?: string | null
+  lead?: string | null
+  description?: string | null
+  cta: {
+    heading: string
+    body?: SerializedEditorState | null
+    primaryAction?: {
+      label?: string | null
+      href?: string | null
+    } | null
+    secondaryAction?: {
+      label?: string | null
+      href?: string | null
+    } | null
+    images: {
+      image?: {
+        url?: string | null
+        alt?: string | null
+      } | null
+    }[]
+  }
+}
+
 type TestimonialFromPayload = {
   id: string
   quote: string
@@ -171,6 +203,7 @@ type PageFromPayload = {
     | VideoBlockFromPayload
     | ServicesBlockFromPayload
     | TeamBlockFromPayload
+    | CtaBlockFromPayload
     | TestimonialsBlockFromPayload
     | FormBlockFromPayload
   )[]
@@ -342,6 +375,19 @@ export default async function HomePage() {
                 toggleFileUrl={formBlock.toggleFile?.url ?? undefined}
                 submitLabel={formBlock.submitLabel}
                 endpoint={formBlock.endpoint}
+              />
+            )
+          }
+
+          case 'cta': {
+            const ctaBlock = block as CtaBlockFromPayload
+
+            return (
+              <CtaSection
+                key={ctaBlock.id}
+                block={ctaBlock}
+                primaryTrailingIcon={<ArrowRightIcon className="h-5 w-5" />}
+                secondaryTrailingIcon={<InformationCircleIcon className="h-5 w-5" />}
               />
             )
           }
