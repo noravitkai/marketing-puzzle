@@ -1,10 +1,20 @@
+import * as React from 'react'
 import Hero from '@/components/home/Hero'
 import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
 import Team, { TeamMember } from '@/components/home/Team'
 import Testimonials, { Testimonial } from '@/components/home/Testimonials'
+import CtaSection from '@/components/sections/Cta'
 import ContactSection from '@/components/home/Contact'
 import { getPayloadClient } from '@/payload/getPayloadClient'
+import type { SerializedEditorState } from 'lexical'
+import { ArrowRightIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
+
+type Media = {
+  id: string
+  url?: string | null
+  alt?: string | null
+}
 
 type HeroCardFromPayload = {
   id: string
@@ -15,11 +25,7 @@ type HeroCardFromPayload = {
     id: string
     slug: string
   } | null
-  image?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
+  image?: Media | null
 }
 
 type HeroBlockFromPayload = {
@@ -45,19 +51,13 @@ type VideoBlockFromPayload = {
   privacyEnhanced?: boolean | null
 }
 
-type ServiceCardFromPayload = {
+type ServiceDoc = {
   id: string
+  slug: string
   title: string
-  description: string
-  targetPage: {
-    id: string
-    slug: string
-  }
-  icon?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
+  excerpt: string
+  featured?: boolean
+  icon?: Media | null
 }
 
 type ServicesBlockFromPayload = {
@@ -67,7 +67,28 @@ type ServicesBlockFromPayload = {
   lead?: string | null
   description?: string | null
   ctaLabel: string
-  items?: ServiceCardFromPayload[]
+  mode?: 'all' | 'featured' | 'manual'
+  services?: ServiceDoc[]
+}
+
+function normalizeService(service: ServiceDoc): ServiceCard {
+  const icon = service.icon
+  const iconUrl =
+    icon && typeof icon === 'object' && 'url' in icon && icon.url ? icon.url : undefined
+  const iconAlt =
+    icon && typeof icon === 'object' && 'alt' in icon && icon.alt ? icon.alt : service.title
+
+  const slug = service.slug?.trim()
+  const href = slug ? `/szolgaltatasok/${slug}` : '#'
+
+  return {
+    id: service.id,
+    title: service.title,
+    description: service.excerpt,
+    href,
+    iconUrl,
+    iconAlt,
+  }
 }
 
 type TeamMemberFromPayload = {
@@ -78,11 +99,7 @@ type TeamMemberFromPayload = {
     id: string
     label: string
   }[]
-  photo?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
+  photo?: Media | null
 }
 
 type TeamBlockFromPayload = {
@@ -92,6 +109,34 @@ type TeamBlockFromPayload = {
   lead?: string | null
   description?: string | null
   members?: TeamMemberFromPayload[]
+}
+
+type CtaBlockFromPayload = {
+  id: string
+  blockType: 'cta'
+  showHeader?: boolean | null
+  imagePosition?: 'images-right' | 'images-left' | null
+  heading?: string | null
+  lead?: string | null
+  description?: string | null
+  cta: {
+    heading: string
+    body?: SerializedEditorState | null
+    primaryAction?: {
+      label?: string | null
+      href?: string | null
+    } | null
+    secondaryAction?: {
+      label?: string | null
+      href?: string | null
+    } | null
+    images: {
+      image?: {
+        url?: string | null
+        alt?: string | null
+      } | null
+    }[]
+  }
 }
 
 type TestimonialFromPayload = {
@@ -121,11 +166,7 @@ type FormBlockFromPayload = {
   heading: string
   lead?: string | null
   description?: string | null
-  image?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
+  image?: Media | null
   lastNameLabel: string
   lastNameHint?: string | null
   lastNamePlaceholder?: string | null
@@ -153,11 +194,7 @@ type FormBlockFromPayload = {
   messagePlaceholder?: string | null
   toggleLabel: string
   toggleDescription?: string | null
-  toggleFile?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
+  toggleFile?: Media | null
   submitLabel: string
   endpoint: string
 }
@@ -171,6 +208,7 @@ type PageFromPayload = {
     | VideoBlockFromPayload
     | ServicesBlockFromPayload
     | TeamBlockFromPayload
+    | CtaBlockFromPayload
     | TestimonialsBlockFromPayload
     | FormBlockFromPayload
   )[]
@@ -192,6 +230,37 @@ export default async function HomePage() {
 
   const docs = result.docs as PageFromPayload[]
   const [page] = docs
+
+  let servicesCards: ServiceCard[] = []
+
+  const servicesLayoutBlock = page.layout.find(
+    (block) => block.blockType === 'services',
+  ) as ServicesBlockFromPayload | undefined
+
+  if (servicesLayoutBlock) {
+    let serviceDocs: ServiceDoc[] = []
+
+    if (servicesLayoutBlock.mode === 'manual' && servicesLayoutBlock.services?.length) {
+      serviceDocs = servicesLayoutBlock.services as ServiceDoc[]
+    } else {
+      const where: Record<string, any> = {}
+
+      if (servicesLayoutBlock.mode === 'featured') {
+        where.featured = { equals: true }
+      }
+
+      const { docs: fetchedServices } = await payload.find({
+        collection: 'services',
+        depth: 1,
+        sort: '-createdAt',
+        ...(Object.keys(where).length ? { where } : {}),
+      })
+
+      serviceDocs = fetchedServices as ServiceDoc[]
+    }
+
+    servicesCards = serviceDocs.map(normalizeService)
+  }
 
   return (
     <>
@@ -218,16 +287,6 @@ export default async function HomePage() {
           case 'services': {
             const servicesBlock = block as ServicesBlockFromPayload
 
-            const services: ServiceCard[] =
-              servicesBlock.items?.map((item) => ({
-                id: item.id,
-                title: item.title,
-                description: item.description,
-                href: `/${item.targetPage.slug}`,
-                iconUrl: item.icon?.url ?? undefined,
-                iconAlt: item.icon?.alt ?? item.title,
-              })) ?? []
-
             return (
               <Services
                 key={servicesBlock.id}
@@ -235,7 +294,7 @@ export default async function HomePage() {
                 lead={servicesBlock.lead ?? undefined}
                 description={servicesBlock.description ?? undefined}
                 ctaLabel={servicesBlock.ctaLabel}
-                services={services}
+                services={servicesCards}
               />
             )
           }
@@ -342,6 +401,19 @@ export default async function HomePage() {
                 toggleFileUrl={formBlock.toggleFile?.url ?? undefined}
                 submitLabel={formBlock.submitLabel}
                 endpoint={formBlock.endpoint}
+              />
+            )
+          }
+
+          case 'cta': {
+            const ctaBlock = block as CtaBlockFromPayload
+
+            return (
+              <CtaSection
+                key={ctaBlock.id}
+                block={ctaBlock}
+                primaryTrailingIcon={<ArrowRightIcon className="h-5 w-5" />}
+                secondaryTrailingIcon={<InformationCircleIcon className="h-5 w-5" />}
               />
             )
           }
