@@ -78,11 +78,14 @@ function normalizeService(service: ServiceDoc): ServiceCard {
   const iconAlt =
     icon && typeof icon === 'object' && 'alt' in icon && icon.alt ? icon.alt : service.title
 
+  const slug = service.slug?.trim()
+  const href = slug ? `/szolgaltatasok/${slug}` : '#'
+
   return {
     id: service.id,
     title: service.title,
     description: service.excerpt,
-    href: `/szolgaltatasok/${service.slug}`,
+    href,
     iconUrl,
     iconAlt,
   }
@@ -230,9 +233,9 @@ export default async function HomePage() {
 
   let servicesCards: ServiceCard[] = []
 
-  const servicesLayoutBlock = page.layout.find((block) => block.blockType === 'services') as
-    | ServicesBlockFromPayload
-    | undefined
+  const servicesLayoutBlock = page.layout.find(
+    (block) => block.blockType === 'services',
+  ) as ServicesBlockFromPayload | undefined
 
   if (servicesLayoutBlock) {
     let serviceDocs: ServiceDoc[] = []
