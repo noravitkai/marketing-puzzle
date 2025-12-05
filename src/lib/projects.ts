@@ -1,4 +1,5 @@
 import { getPayloadClient } from '@/payload/getPayloadClient'
+import { getDisplayUrl } from '@/lib/url'
 
 export type Media = {
   id: string
@@ -6,21 +7,25 @@ export type Media = {
   alt?: string | null
 }
 
+export type ProjectLink = {
+  label?: string | null
+  url?: string | null
+}
+
 export type ProjectDoc = {
   id: string
   slug: string
   title: string
   excerpt: string
-  tag?: string
   featured?: boolean
   thumbnail: Media | string
-  body?: any
   image?: Media | string
+  body?: any
+
   client?: string | null
   year?: string | null
-  services?: string | null
-  result?: string | null
-  url?: string | null
+  tags?: string[] | null
+  links?: ProjectLink[]
 }
 
 export type NormalizedProject = {
@@ -28,7 +33,12 @@ export type NormalizedProject = {
   title: string
   description: string
   imageSrc: string
-  tag?: string
+  tags: string[]
+}
+
+export type NormalizedLink = {
+  href: string
+  label: string
 }
 
 export type ProjectsLayoutBlock = {
@@ -68,13 +78,29 @@ export function normalizeProject(project: ProjectDoc): NormalizedProject {
   const imageSrc =
     thumb && typeof thumb === 'object' && 'url' in thumb && thumb.url ? thumb.url : ''
 
+  const tags = Array.isArray(project.tags)
+    ? project.tags.filter((tag): tag is string => typeof tag === 'string' && tag.trim() !== '')
+    : []
+
   return {
     slug: project.slug,
     title: project.title,
     description: project.excerpt,
     imageSrc,
-    tag: project.tag,
+    tags,
   }
+}
+
+export function getProjectLinks(project: ProjectDoc): NormalizedLink[] {
+  const rawLinks = Array.isArray(project.links) ? project.links : []
+
+  return rawLinks
+    .map((link) => {
+      const { href, label } = getDisplayUrl(link.url, link.label)
+      if (!href || !label) return null
+      return { href, label }
+    })
+    .filter((link): link is NormalizedLink => link !== null)
 }
 
 export async function getProjectsIndexData() {

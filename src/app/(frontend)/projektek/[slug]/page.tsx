@@ -2,12 +2,17 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { LinkIcon } from '@heroicons/react/24/outline'
+
 import { Container } from '@/components/ui/Container'
 import { Lead, Paragraph } from '@/components/ui/Text'
 import { Prose } from '@/components/ui/Prose'
 import { Badge } from '@/components/ui/Badge'
-import { getDisplayUrl } from '@/lib/url'
-import { getProjectBySlug } from '@/lib/projects'
+import {
+  getProjectBySlug,
+  getProjectLinks,
+  type ProjectDoc,
+  type NormalizedLink,
+} from '@/lib/projects'
 
 type ProjectPageParams = {
   params: {
@@ -17,47 +22,8 @@ type ProjectPageParams = {
 
 export const dynamic = 'force-dynamic'
 
-type ProjectLink = {
-  label?: string | null
-  url?: string | null
-}
-
-type ProjectDoc = {
-  id: string
-  slug: string
-  title: string
-  excerpt: string
-  thumbnail: { url?: string | null; alt?: string | null } | string
-  image?: { url?: string | null; alt?: string | null } | string
-  client?: string | null
-  year?: string | null
-  links?: ProjectLink[]
-  tags?: string[] | null
-  body?: any
-}
-
-type NormalizedLink = {
-  href: string
-  label: string
-}
-
-function getProjectLinks(project: ProjectDoc): NormalizedLink[] {
-  const rawLinks = Array.isArray(project.links) ? project.links : []
-
-  return rawLinks
-    .map((link) => {
-      const { href, label } = getDisplayUrl(link.url, link.label)
-      if (!href || !label) return null
-      return { href, label }
-    })
-    .filter((link): link is NormalizedLink => link !== null)
-}
-
 type ProjectDetailsProps = {
-  project: {
-    client?: string | null
-    year?: string | null
-  }
+  project: Pick<ProjectDoc, 'client' | 'year'>
   links: NormalizedLink[]
 }
 
@@ -108,7 +74,7 @@ function ProjectDetails({ project, links }: ProjectDetailsProps) {
 }
 
 export async function generateMetadata({ params }: ProjectPageParams): Promise<Metadata> {
-  const project = (await getProjectBySlug(params.slug)) as ProjectDoc | null
+  const project = await getProjectBySlug(params.slug)
 
   if (!project) {
     return {
@@ -123,7 +89,7 @@ export async function generateMetadata({ params }: ProjectPageParams): Promise<M
 }
 
 export default async function ProjectPage({ params }: ProjectPageParams) {
-  const project = (await getProjectBySlug(params.slug)) as ProjectDoc | null
+  const project = await getProjectBySlug(params.slug)
 
   if (!project) {
     notFound()
@@ -171,6 +137,7 @@ export default async function ProjectPage({ params }: ProjectPageParams) {
             )}
           </aside>
         )}
+
         <div className={showRightColumn ? 'order-2 lg:order-1' : 'order-1 lg:order-1'}>
           {tags.length > 0 && (
             <div className="mb-6 flex flex-wrap gap-2">
@@ -181,7 +148,9 @@ export default async function ProjectPage({ params }: ProjectPageParams) {
               ))}
             </div>
           )}
+
           <Lead as="h1">{project.title}</Lead>
+
           <div className="mt-6">
             {project.body ? (
               <Prose value={project.body} />
@@ -192,6 +161,7 @@ export default async function ProjectPage({ params }: ProjectPageParams) {
             )}
           </div>
         </div>
+
         {showDetailsSection && (
           <div className="order-3 border-t border-zinc-100 pt-6 lg:hidden">
             <ProjectDetails project={project} links={links} />
