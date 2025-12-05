@@ -14,10 +14,10 @@ import {
   type NormalizedLink,
 } from '@/lib/projects'
 
-type ProjectPageParams = {
-  params: {
+type ProjectPageProps = {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export const dynamic = 'force-dynamic'
@@ -51,6 +51,7 @@ function ProjectDetails({ project, links }: ProjectDetailsProps) {
           )}
         </dl>
       )}
+
       {hasLinks && (
         <div className={hasDetails ? 'border-t border-zinc-100 pt-6' : ''}>
           <div className="flex flex-col gap-1">
@@ -73,8 +74,9 @@ function ProjectDetails({ project, links }: ProjectDetailsProps) {
   )
 }
 
-export async function generateMetadata({ params }: ProjectPageParams): Promise<Metadata> {
-  const project = await getProjectBySlug(params.slug)
+export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const project = await getProjectBySlug(slug)
 
   if (!project) {
     return {
@@ -88,8 +90,9 @@ export async function generateMetadata({ params }: ProjectPageParams): Promise<M
   }
 }
 
-export default async function ProjectPage({ params }: ProjectPageParams) {
-  const project = await getProjectBySlug(params.slug)
+export default async function ProjectPage({ params }: ProjectPageProps) {
+  const { slug } = await params
+  const project = await getProjectBySlug(slug)
 
   if (!project) {
     notFound()
@@ -130,6 +133,7 @@ export default async function ProjectPage({ params }: ProjectPageParams) {
                 />
               </div>
             )}
+
             {showDetailsSection && (
               <div className="hidden lg:block">
                 <ProjectDetails project={project} links={links} />
