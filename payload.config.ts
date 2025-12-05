@@ -9,6 +9,7 @@ import { teamBlock } from '@/payload/blocks/team'
 import { testimonialsBlock } from '@/payload/blocks/testimonials'
 import { formBlock } from '@/payload/blocks/form'
 import { projectsBlock } from '@/payload/blocks/projects'
+import { contactInfoBlock } from '@/payload/blocks/info'
 import { projectsCollection } from '@/payload/collections/projects'
 
 export default buildConfig({
@@ -84,6 +85,7 @@ export default buildConfig({
             testimonialsBlock,
             formBlock,
             projectsBlock,
+            contactInfoBlock,
           ],
         },
         {
