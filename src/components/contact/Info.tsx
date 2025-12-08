@@ -93,7 +93,10 @@ export default function ContactInfo({
 
               const href = item.href
               const isExternal = href ? href.startsWith('http') : false
-              const tiltClassName = index % 2 === 0 ? 'hover:-rotate-1' : 'hover:rotate-1'
+              const tiltClassName =
+                index % 2 === 0
+                  ? 'hover:-rotate-1 sm:hover:scale-103 hover:shadow-md'
+                  : 'hover:rotate-1 sm:hover:scale-103 hover:shadow-md'
 
               const className = [
                 'transition-transform',
