@@ -17,7 +17,9 @@ const NAV_ITEMS = [
   { href: '/blog', label: 'Blog' },
 ]
 
-const GLOW_BASE_CLASSES =
+const NAV_GLOW_CLASSES = 'rounded-full bg-primary/30 blur-md transition duration-500 ease-in-out'
+
+const TOGGLE_GLOW_CLASSES =
   'bg-primary/30 hidden h-6 w-14 rounded-full blur-lg transition duration-500 ease-in-out md:block'
 
 const FOCUS_RING_PRIMARY =
@@ -28,7 +30,7 @@ const SCROLL_DELTA = 5
 function glowStateClasses(active: boolean) {
   return active
     ? 'scale-100 opacity-100'
-    : 'scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100'
+    : 'scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100'
 }
 
 function useHideOnScroll() {
@@ -139,13 +141,17 @@ function DesktopNavItem({ href, children }: { href: string; children: React.Reac
           isActive ? 'text-primary' : 'hover:text-primary',
         )}
       >
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 flex items-center justify-center"
-        >
-          <span className={clsx(GLOW_BASE_CLASSES, glowStateClasses(isActive))} />
+        <span className="relative inline-flex items-center">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 flex items-center justify-center"
+          >
+            <span
+              className={clsx('block h-full w-full', NAV_GLOW_CLASSES, glowStateClasses(isActive))}
+            />
+          </span>
+          <span className="relative z-10">{children}</span>
         </span>
-        <span className="relative z-10">{children}</span>
       </Link>
     </li>
   )
@@ -202,7 +208,7 @@ function LanguageToggle({ className }: { className?: string }) {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 flex items-center justify-center"
       >
-        <span className={clsx(GLOW_BASE_CLASSES, glowStateClasses(false))} />
+        <span className={clsx(TOGGLE_GLOW_CLASSES, glowStateClasses(false))} />
       </span>
       <span className="relative z-10">{lang}</span>
     </button>
