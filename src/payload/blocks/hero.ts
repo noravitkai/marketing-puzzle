@@ -74,34 +74,11 @@ export const heroBlock: Block = {
           required: true,
         },
         {
-          name: 'linkType',
-          label: 'Link típusa',
-          type: 'select',
-          options: [
-            { label: 'Belső link', value: 'internal' },
-            { label: 'Külső link', value: 'external' },
-          ],
-          defaultValue: 'internal',
-          required: true,
-        },
-        {
-          name: 'internalPage',
-          label: 'Belső link',
+          name: 'service',
+          label: 'Szolgáltatás',
           type: 'relationship',
-          relationTo: 'pages',
-          required: false,
-          admin: {
-            condition: (_, siblingData) => siblingData.linkType === 'internal',
-          },
-        },
-        {
-          name: 'href',
-          label: 'Külső link',
-          type: 'text',
-          required: false,
-          admin: {
-            condition: (_, siblingData) => siblingData.linkType === 'external',
-          },
+          relationTo: 'services',
+          required: true,
         },
       ],
     },

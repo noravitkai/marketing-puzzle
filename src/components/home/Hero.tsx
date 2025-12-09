@@ -11,9 +11,7 @@ import { PlayCircleIcon, ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react
 export type HeroCard = {
   id: string
   badgeText: string
-  linkType: 'internal' | 'external'
-  href?: string | null
-  internalPage?: {
+  service?: {
     slug: string
   } | null
   image?: {
@@ -34,14 +32,9 @@ export type HeroProps = {
 }
 
 function resolveCardHref(card: HeroCard): string {
-  if (card.linkType === 'internal' && card.internalPage?.slug) {
-    return `/${card.internalPage.slug}`
+  if (card.service?.slug) {
+    return `/szolgaltatasok/${card.service.slug}`
   }
-
-  if (card.href) {
-    return card.href
-  }
-
   return '#'
 }
 
