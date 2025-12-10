@@ -45,7 +45,7 @@ export const formBlock: Block = {
       label: 'Háttérkép',
       type: 'upload',
       relationTo: 'media',
-      required: false,
+      required: true,
     },
     {
       name: 'lastNameLabel',
@@ -187,31 +187,6 @@ export const formBlock: Block = {
       type: 'text',
       required: false,
       defaultValue: 'Kérünk, válassz.',
-    },
-    {
-      name: 'serviceOptions',
-      label: 'Szolgáltatás lehetőségek',
-      labels: {
-        singular: 'Szolgáltatás lehetőség',
-        plural: 'Szolgáltatás lehetőségek',
-      },
-      type: 'array',
-      minRows: 1,
-      required: true,
-      fields: [
-        {
-          name: 'value',
-          label: 'Szolgáltatás (érték)',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'label',
-          label: 'Felirat (megjelenített szöveg)',
-          type: 'text',
-          required: true,
-        },
-      ],
     },
     {
       name: 'messageLabel',

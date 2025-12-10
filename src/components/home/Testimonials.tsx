@@ -17,7 +17,7 @@ export type Testimonial = {
 }
 
 type TestimonialsProps = {
-  heading: string
+  heading?: string
   lead?: string
   description?: string
   items: Testimonial[]
@@ -86,19 +86,22 @@ export default function Testimonials({ heading, lead, description, items }: Test
   const strokeOffset = CIRCLE_LENGTH * (1 - progress)
 
   const showControls = items.length > 1
+  const hasHeader = Boolean(heading || lead || description)
 
   return (
-    <section id="vélemények" ref={sectionRef as React.RefObject<HTMLElement>}>
+    <section id="velemenyek" ref={sectionRef as React.RefObject<HTMLElement>}>
       <Container className="mt-16 sm:mt-24">
         <div className="flex flex-col items-center gap-4 text-center">
-          <div className="flex flex-col items-center gap-6 text-center">
-            <Heading as="h2">{heading}</Heading>
-            {lead ? <Lead as="p">{lead}</Lead> : null}
-            {description ? <Paragraph className="max-w-2xl">{description}</Paragraph> : null}
-          </div>
+          {hasHeader ? (
+            <div className="flex flex-col items-center gap-6 text-center">
+              {heading ? <Heading as="h2">{heading}</Heading> : null}
+              {lead ? <Lead as="p">{lead}</Lead> : null}
+              {description ? <Paragraph className="max-w-2xl">{description}</Paragraph> : null}
+            </div>
+          ) : null}
         </div>
 
-        <div className="mt-8">
+        <div className={hasHeader ? 'mt-8' : 'mt-0'}>
           <Swiper
             modules={[Autoplay, Navigation]}
             loop={items.length > 1}
@@ -194,7 +197,6 @@ export default function Testimonials({ heading, lead, description, items }: Test
               >
                 <ArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
               </button>
-
               <button
                 type="button"
                 className="next-button text-primary hover:bg-primary ring-primary rounded-full p-2 shadow-md ring-1 shadow-zinc-800/5 transition duration-300 ease-in-out hover:-rotate-9 hover:text-white"

@@ -45,7 +45,8 @@ type HeroBlockFromPayload = {
 type VideoBlockFromPayload = {
   id: string
   blockType: 'video'
-  heading: string
+  showHeader?: boolean | null
+  heading?: string | null
   lead?: string | null
   description?: string | null
   youtubeId: string
@@ -64,7 +65,8 @@ type ServiceDoc = {
 type ServicesBlockFromPayload = {
   id: string
   blockType: 'services'
-  heading: string
+  showHeader?: boolean | null
+  heading?: string | null
   lead?: string | null
   description?: string | null
   ctaLabel: string
@@ -106,7 +108,8 @@ type TeamMemberFromPayload = {
 type TeamBlockFromPayload = {
   id: string
   blockType: 'team'
-  heading: string
+  showHeader?: boolean | null
+  heading?: string | null
   lead?: string | null
   description?: string | null
   members?: TeamMemberFromPayload[]
@@ -150,7 +153,8 @@ type TestimonialFromPayload = {
 type TestimonialsBlockFromPayload = {
   id: string
   blockType: 'testimonials'
-  heading: string
+  showHeader?: boolean | null
+  heading?: string | null
   lead?: string | null
   description?: string | null
   items?: TestimonialFromPayload[]
@@ -290,13 +294,16 @@ export default async function HomePage() {
 
           case 'services': {
             const servicesBlock = block as ServicesBlockFromPayload
+            const shouldShowHeader = servicesBlock.showHeader !== false
 
             return (
               <Services
                 key={servicesBlock.id}
-                heading={servicesBlock.heading}
-                lead={servicesBlock.lead ?? undefined}
-                description={servicesBlock.description ?? undefined}
+                heading={shouldShowHeader ? (servicesBlock.heading ?? undefined) : undefined}
+                lead={shouldShowHeader ? (servicesBlock.lead ?? undefined) : undefined}
+                description={
+                  shouldShowHeader ? (servicesBlock.description ?? undefined) : undefined
+                }
                 ctaLabel={servicesBlock.ctaLabel}
                 services={servicesCards}
               />
@@ -305,13 +312,14 @@ export default async function HomePage() {
 
           case 'video': {
             const videoBlock = block as VideoBlockFromPayload
+            const shouldShowHeader = videoBlock.showHeader !== false
 
             return (
               <Video
                 key={videoBlock.id}
-                heading={videoBlock.heading}
-                lead={videoBlock.lead ?? undefined}
-                description={videoBlock.description ?? undefined}
+                heading={shouldShowHeader ? (videoBlock.heading ?? undefined) : undefined}
+                lead={shouldShowHeader ? (videoBlock.lead ?? undefined) : undefined}
+                description={shouldShowHeader ? (videoBlock.description ?? undefined) : undefined}
                 youtubeId={videoBlock.youtubeId}
                 privacyEnhanced={videoBlock.privacyEnhanced ?? false}
               />
@@ -320,6 +328,7 @@ export default async function HomePage() {
 
           case 'team': {
             const teamBlock = block as TeamBlockFromPayload
+            const shouldShowHeader = teamBlock.showHeader !== false
 
             const members: TeamMember[] =
               teamBlock.members?.map((member) => ({
@@ -334,9 +343,9 @@ export default async function HomePage() {
             return (
               <Team
                 key={teamBlock.id}
-                heading={teamBlock.heading}
-                lead={teamBlock.lead ?? undefined}
-                description={teamBlock.description ?? undefined}
+                heading={shouldShowHeader ? (teamBlock.heading ?? undefined) : undefined}
+                lead={shouldShowHeader ? (teamBlock.lead ?? undefined) : undefined}
+                description={shouldShowHeader ? (teamBlock.description ?? undefined) : undefined}
                 members={members}
               />
             )
@@ -344,6 +353,7 @@ export default async function HomePage() {
 
           case 'testimonials': {
             const testimonialsBlock = block as TestimonialsBlockFromPayload
+            const shouldShowHeader = testimonialsBlock.showHeader !== false
 
             const items: Testimonial[] =
               testimonialsBlock.items?.map((item) => ({
@@ -356,9 +366,11 @@ export default async function HomePage() {
             return (
               <Testimonials
                 key={testimonialsBlock.id}
-                heading={testimonialsBlock.heading}
-                lead={testimonialsBlock.lead ?? undefined}
-                description={testimonialsBlock.description ?? undefined}
+                heading={shouldShowHeader ? (testimonialsBlock.heading ?? undefined) : undefined}
+                lead={shouldShowHeader ? (testimonialsBlock.lead ?? undefined) : undefined}
+                description={
+                  shouldShowHeader ? (testimonialsBlock.description ?? undefined) : undefined
+                }
                 items={items}
               />
             )

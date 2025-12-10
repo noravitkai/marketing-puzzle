@@ -14,7 +14,7 @@ export type ServiceCard = {
 }
 
 type ServicesProps = {
-  heading: string
+  heading?: string
   lead?: string
   description?: string
   ctaLabel: string
@@ -30,15 +30,25 @@ export default function Services({
 }: ServicesProps) {
   if (!services.length) return null
 
+  const hasHeader = Boolean(heading || lead || description)
+
   return (
     <section id="szolgaltatasok">
       <Container className="mt-16 sm:mt-20">
-        <div className="flex flex-col items-center gap-6 text-center">
-          {heading && <Heading>{heading}</Heading>}
-          {lead && <Lead>{lead}</Lead>}
-          {description && <Paragraph className="max-w-3xl">{description}</Paragraph>}
-        </div>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
+        {hasHeader ? (
+          <div className="flex flex-col items-center gap-6 text-center">
+            {heading ? <Heading>{heading}</Heading> : null}
+            {lead ? <Lead>{lead}</Lead> : null}
+            {description ? <Paragraph className="max-w-3xl">{description}</Paragraph> : null}
+          </div>
+        ) : null}
+        <div
+          className={
+            hasHeader
+              ? 'mt-8 grid gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3'
+              : 'grid gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3'
+          }
+        >
           {services.map((service, index) => {
             const tiltClassName = index % 2 === 0 ? 'hover:rotate-2' : 'hover:-rotate-2'
             return (
