@@ -10,6 +10,7 @@ import { ctaBlock } from '@/payload/blocks/cta'
 import { testimonialsBlock } from '@/payload/blocks/testimonials'
 import { formBlock } from '@/payload/blocks/form'
 import { projectsBlock } from '@/payload/blocks/projects'
+import { contactInfoBlock } from '@/payload/blocks/contact'
 import { projectsCollection } from '@/payload/collections/projects'
 import { servicesCollection } from '@/payload/collections/services'
 
@@ -74,6 +75,24 @@ export default buildConfig({
           unique: true,
         },
         {
+          name: 'mainTitle',
+          label: 'Fő címrész',
+          type: 'text',
+          required: false,
+        },
+        {
+          name: 'highlightedTitle',
+          label: 'Kiemelt címrész',
+          type: 'text',
+          required: false,
+        },
+        {
+          name: 'headerDescription',
+          label: 'Leírás',
+          type: 'textarea',
+          required: false,
+        },
+        {
           name: 'layout',
           label: 'Page layout',
           type: 'blocks',
@@ -87,6 +106,7 @@ export default buildConfig({
             testimonialsBlock,
             formBlock,
             projectsBlock,
+            contactInfoBlock,
           ],
         },
         {

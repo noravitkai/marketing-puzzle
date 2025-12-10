@@ -8,22 +8,37 @@ export const formBlock: Block = {
   },
   fields: [
     {
+      name: 'showHeader',
+      label: 'Szekció fejléce megjelenjen?',
+      type: 'checkbox',
+      defaultValue: true,
+    },
+    {
       name: 'heading',
       label: 'Szekció címe',
       type: 'text',
-      required: true,
+      required: false,
+      admin: {
+        condition: (_, siblingData) => Boolean(siblingData.showHeader),
+      },
     },
     {
       name: 'lead',
       label: 'Alcím',
       type: 'text',
       required: false,
+      admin: {
+        condition: (_, siblingData) => Boolean(siblingData.showHeader),
+      },
     },
     {
       name: 'description',
       label: 'Leírás',
       type: 'textarea',
       required: false,
+      admin: {
+        condition: (_, siblingData) => Boolean(siblingData.showHeader),
+      },
     },
     {
       name: 'image',
