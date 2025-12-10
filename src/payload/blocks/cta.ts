@@ -84,15 +84,25 @@ export const ctaBlock: Block = {
           fields: [
             {
               name: 'label',
-              label: 'Gomb szövege',
+              label: 'Felirat',
               type: 'text',
               required: false,
             },
             {
               name: 'href',
-              label: 'Hivatkozás (URL vagy slug)',
+              label: 'Hivatkozás',
               type: 'text',
               required: false,
+              validate: (value: unknown, { siblingData }: { siblingData: any }) => {
+                const label = siblingData?.label ? String(siblingData.label).trim() : ''
+                const href = typeof value === 'string' ? value.trim() : ''
+
+                if (label && !href) {
+                  return 'Linket is adj meg.'
+                }
+
+                return true
+              },
             },
           ],
         },
@@ -103,15 +113,25 @@ export const ctaBlock: Block = {
           fields: [
             {
               name: 'label',
-              label: 'Gomb szövege',
+              label: 'Felirat',
               type: 'text',
               required: false,
             },
             {
               name: 'href',
-              label: 'Hivatkozás (URL vagy slug)',
+              label: 'Hivatkozás',
               type: 'text',
               required: false,
+              validate: (value: unknown, { siblingData }: { siblingData: any }) => {
+                const label = siblingData?.label ? String(siblingData.label).trim() : ''
+                const href = typeof value === 'string' ? value.trim() : ''
+
+                if (label && !href) {
+                  return 'Linket is adj meg.'
+                }
+
+                return true
+              },
             },
           ],
         },

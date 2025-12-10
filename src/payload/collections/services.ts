@@ -60,6 +60,19 @@ export const servicesCollection: CollectionConfig = {
       type: 'text',
       required: false,
       defaultValue: '/kapcsolat',
+      validate: (
+        value: unknown,
+        { siblingData }: { siblingData?: { primaryCtaLabel?: string } },
+      ): true | string => {
+        const rawLabel = siblingData?.primaryCtaLabel
+        const label = typeof rawLabel === 'string' ? rawLabel.trim() : ''
+
+        if (label && (!value || !String(value).trim())) {
+          return 'Linket is adj meg.'
+        }
+
+        return true
+      },
     },
     {
       name: 'secondaryCtaLabel',
@@ -74,6 +87,19 @@ export const servicesCollection: CollectionConfig = {
       type: 'text',
       required: false,
       defaultValue: '/#szolgaltatasok',
+      validate: (
+        value: unknown,
+        { siblingData }: { siblingData?: { secondaryCtaLabel?: string } },
+      ): true | string => {
+        const rawLabel = siblingData?.secondaryCtaLabel
+        const label = typeof rawLabel === 'string' ? rawLabel.trim() : ''
+
+        if (label && (!value || !String(value).trim())) {
+          return 'Linket is adj meg.'
+        }
+
+        return true
+      },
     },
   ],
 }
