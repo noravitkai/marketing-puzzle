@@ -20,13 +20,10 @@ type Media = {
 type HeroCardFromPayload = {
   id: string
   badgeText: string
-  linkType: 'internal' | 'external'
-  href?: string | null
-  internalPage?: {
-    id: string
+  image?: Media | null
+  service?: {
     slug: string
   } | null
-  image?: Media | null
 }
 
 type HeroBlockFromPayload = {
