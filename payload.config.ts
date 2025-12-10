@@ -13,6 +13,7 @@ import { projectsBlock } from '@/payload/blocks/projects'
 import { contactInfoBlock } from '@/payload/blocks/contact'
 import { projectsCollection } from '@/payload/collections/projects'
 import { servicesCollection } from '@/payload/collections/services'
+import { teamMembersCollection } from '@/payload/collections/teamMembers'
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
@@ -117,6 +118,7 @@ export default buildConfig({
     },
     projectsCollection,
     servicesCollection,
+    teamMembersCollection,
   ],
 
   db: sqliteAdapter({

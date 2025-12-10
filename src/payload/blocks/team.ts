@@ -43,51 +43,10 @@ export const teamBlock: Block = {
     {
       name: 'members',
       label: 'Csapattagok',
-      labels: {
-        singular: 'Csapattag',
-        plural: 'Csapattagok',
-      },
-      type: 'array',
-      minRows: 1,
-      fields: [
-        {
-          name: 'name',
-          label: 'Név',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'description',
-          label: 'Bemutatkozás',
-          type: 'textarea',
-          required: false,
-        },
-        {
-          name: 'positions',
-          label: 'Pozíciók',
-          labels: {
-            singular: 'Pozíció',
-            plural: 'Pozíciók',
-          },
-          type: 'array',
-          required: false,
-          fields: [
-            {
-              name: 'label',
-              label: 'Megnevezés',
-              type: 'text',
-              required: true,
-            },
-          ],
-        },
-        {
-          name: 'photo',
-          label: 'Fotó',
-          type: 'upload',
-          relationTo: 'media',
-          required: true,
-        },
-      ],
+      type: 'relationship',
+      relationTo: 'teamMembers',
+      hasMany: true,
+      required: false,
     },
   ],
 }
