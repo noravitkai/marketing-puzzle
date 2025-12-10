@@ -6,11 +6,13 @@ import { heroBlock } from '@/payload/blocks/hero'
 import { videoBlock } from '@/payload/blocks/video'
 import { servicesBlock } from '@/payload/blocks/services'
 import { teamBlock } from '@/payload/blocks/team'
+import { ctaBlock } from '@/payload/blocks/cta'
 import { testimonialsBlock } from '@/payload/blocks/testimonials'
 import { formBlock } from '@/payload/blocks/form'
 import { projectsBlock } from '@/payload/blocks/projects'
 import { contactInfoBlock } from '@/payload/blocks/contact'
 import { projectsCollection } from '@/payload/collections/projects'
+import { servicesCollection } from '@/payload/collections/services'
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
@@ -100,6 +102,7 @@ export default buildConfig({
             videoBlock,
             servicesBlock,
             teamBlock,
+            ctaBlock,
             testimonialsBlock,
             formBlock,
             projectsBlock,
@@ -113,6 +116,7 @@ export default buildConfig({
       ],
     },
     projectsCollection,
+    servicesCollection,
   ],
 
   db: sqliteAdapter({
