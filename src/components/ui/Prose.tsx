@@ -267,6 +267,10 @@ function renderNode(node: LexicalNode, index: number, blockClassName?: string): 
       )
     }
 
+    case 'linebreak': {
+      return <br key={index} />
+    }
+
     case 'text': {
       return renderInlineText(node, index)
     }
