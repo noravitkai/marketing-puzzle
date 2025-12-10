@@ -1,29 +1,30 @@
-import React from 'react'
 import Image from 'next/image'
 import { Container } from '@/components/ui/Container'
 import { Heading, Lead, Paragraph } from '@/components/ui/Text'
-import { ContactForm } from '@/components/ui/ContactForm'
 
-type HomeFormSectionProps = {
+type FormSectionProps = {
+  id?: string
   heading: string
   lead?: string
   description?: string
   imageUrl?: string
   imageAlt?: string
-} & Omit<React.ComponentProps<typeof ContactForm>, 'className'>
+  children: React.ReactNode
+}
 
-export default function ContactSection({
+export function FormSection({
+  id,
   heading,
   lead,
   description,
   imageUrl,
   imageAlt,
-  ...formProps
-}: HomeFormSectionProps) {
+  children,
+}: FormSectionProps) {
   const hasImage = Boolean(imageUrl)
 
   return (
-    <section id="ajanlatkeres">
+    <section id={id}>
       <Container className="mt-16 sm:mt-20">
         <div className="flex flex-col items-center gap-6 text-center">
           <Heading as="h2">{heading}</Heading>
@@ -41,17 +42,10 @@ export default function ContactSection({
                 className="object-cover"
               />
             </div>
-            <div className="flex justify-center">
-              <ContactForm
-                {...formProps}
-                className="-mt-20 w-[90%] rounded-md bg-white p-6 shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm sm:-mt-28 sm:w-[80%] lg:-mt-44"
-              />
-            </div>
+            <div className="flex justify-center">{children}</div>
           </div>
         ) : (
-          <div className="mt-8 flex justify-center">
-            <ContactForm {...formProps} className="w-full max-w-3xl" />
-          </div>
+          <div className="mt-8 flex justify-center">{children}</div>
         )}
       </Container>
     </section>

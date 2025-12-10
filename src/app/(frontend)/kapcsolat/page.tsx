@@ -1,6 +1,7 @@
 import React from 'react'
 import ContactInfo from '@/components/contact/Info'
-import ContactSection from '@/components/home/Contact'
+import { FormSection } from '@/components/sections/Form'
+import { ContactForm, type ContactFormProps } from '@/components/ui/ContactForm'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type Media = {
@@ -48,37 +49,10 @@ type FormBlockFromPayload = {
   lead?: string | null
   description?: string | null
   image?: Media | null
-  lastNameLabel: string
-  lastNameHint?: string | null
-  lastNamePlaceholder?: string | null
-  firstNameLabel: string
-  firstNameHint?: string | null
-  firstNamePlaceholder?: string | null
-  emailLabel: string
-  emailHint?: string | null
-  emailPlaceholder?: string | null
-  phoneLabel: string
-  phoneHint?: string | null
-  phonePlaceholder?: string | null
-  companyLabel: string
-  companyHint?: string | null
-  companyPlaceholder?: string | null
-  websiteLabel: string
-  websiteHint?: string | null
-  websitePlaceholder?: string | null
-  serviceLabel: string
-  serviceHint?: string | null
-  servicePlaceholder?: string | null
-  serviceOptions?: FormServiceOptionFromPayload[]
-  messageLabel: string
-  messageHint?: string | null
-  messagePlaceholder?: string | null
-  toggleLabel: string
-  toggleDescription?: string | null
-  toggleFile?: Media | null
-  submitLabel: string
-  endpoint: string
-}
+} & Omit<ContactFormProps, 'className' | 'serviceOptions' | 'toggleFileUrl'> & {
+    serviceOptions?: FormServiceOptionFromPayload[] | null
+    toggleFile?: Media | null
+  }
 
 type PageDoc = {
   id: string
@@ -145,45 +119,38 @@ export default async function ContactPage() {
           case 'form': {
             const formBlock = block as FormBlockFromPayload
 
+            const {
+              id,
+              heading,
+              lead,
+              description,
+              image,
+              serviceOptions,
+              toggleFile,
+              ...rawFormProps
+            } = formBlock
+
+            const formProps: ContactFormProps = {
+              ...rawFormProps,
+              serviceOptions: serviceOptions ?? [],
+              toggleFileUrl: toggleFile?.url ?? undefined,
+            }
+
             return (
-              <ContactSection
-                key={formBlock.id}
-                heading={formBlock.heading}
-                lead={formBlock.lead ?? undefined}
-                description={formBlock.description ?? undefined}
-                imageUrl={formBlock.image?.url ?? undefined}
-                imageAlt={formBlock.image?.alt ?? undefined}
-                lastNameLabel={formBlock.lastNameLabel}
-                lastNameHint={formBlock.lastNameHint ?? undefined}
-                lastNamePlaceholder={formBlock.lastNamePlaceholder ?? undefined}
-                firstNameLabel={formBlock.firstNameLabel}
-                firstNameHint={formBlock.firstNameHint ?? undefined}
-                firstNamePlaceholder={formBlock.firstNamePlaceholder ?? undefined}
-                emailLabel={formBlock.emailLabel}
-                emailHint={formBlock.emailHint ?? undefined}
-                emailPlaceholder={formBlock.emailPlaceholder ?? undefined}
-                phoneLabel={formBlock.phoneLabel}
-                phoneHint={formBlock.phoneHint ?? undefined}
-                phonePlaceholder={formBlock.phonePlaceholder ?? undefined}
-                companyLabel={formBlock.companyLabel}
-                companyHint={formBlock.companyHint ?? undefined}
-                companyPlaceholder={formBlock.companyPlaceholder ?? undefined}
-                websiteLabel={formBlock.websiteLabel}
-                websiteHint={formBlock.websiteHint ?? undefined}
-                websitePlaceholder={formBlock.websitePlaceholder ?? undefined}
-                serviceLabel={formBlock.serviceLabel}
-                serviceHint={formBlock.serviceHint ?? undefined}
-                servicePlaceholder={formBlock.servicePlaceholder ?? undefined}
-                serviceOptions={formBlock.serviceOptions ?? []}
-                messageLabel={formBlock.messageLabel}
-                messageHint={formBlock.messageHint ?? undefined}
-                messagePlaceholder={formBlock.messagePlaceholder ?? undefined}
-                toggleLabel={formBlock.toggleLabel}
-                toggleDescription={formBlock.toggleDescription ?? undefined}
-                toggleFileUrl={formBlock.toggleFile?.url ?? undefined}
-                submitLabel={formBlock.submitLabel}
-                endpoint={formBlock.endpoint}
-              />
+              <FormSection
+                key={id}
+                id="kapcsolat-form"
+                heading={heading}
+                lead={lead ?? undefined}
+                description={description ?? undefined}
+                imageUrl={image?.url ?? undefined}
+                imageAlt={image?.alt ?? undefined}
+              >
+                <ContactForm
+                  {...formProps}
+                  className="-mt-20 w-[90%] rounded-md bg-white p-6 shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm sm:-mt-28 sm:w-[80%] lg:-mt-44"
+                />
+              </FormSection>
             )
           }
 

@@ -3,7 +3,8 @@ import Video from '@/components/home/Video'
 import Services, { ServiceCard } from '@/components/home/Services'
 import Team, { TeamMember } from '@/components/home/Team'
 import Testimonials, { Testimonial } from '@/components/home/Testimonials'
-import ContactSection from '@/components/home/Contact'
+import { FormSection } from '@/components/sections/Form'
+import { ContactForm, type ContactFormProps } from '@/components/ui/ContactForm'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 
 type HeroCardFromPayload = {
@@ -115,52 +116,23 @@ type FormServiceOptionFromPayload = {
   label: string
 }
 
+type MediaFromPayload = {
+  id: string
+  url?: string | null
+  alt?: string | null
+}
+
 type FormBlockFromPayload = {
   id: string
   blockType: 'form'
   heading: string
   lead?: string | null
   description?: string | null
-  image?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
-  lastNameLabel: string
-  lastNameHint?: string | null
-  lastNamePlaceholder?: string | null
-  firstNameLabel: string
-  firstNameHint?: string | null
-  firstNamePlaceholder?: string | null
-  emailLabel: string
-  emailHint?: string | null
-  emailPlaceholder?: string | null
-  phoneLabel: string
-  phoneHint?: string | null
-  phonePlaceholder?: string | null
-  companyLabel: string
-  companyHint?: string | null
-  companyPlaceholder?: string | null
-  websiteLabel: string
-  websiteHint?: string | null
-  websitePlaceholder?: string | null
-  serviceLabel: string
-  serviceHint?: string | null
-  servicePlaceholder?: string | null
-  serviceOptions?: FormServiceOptionFromPayload[]
-  messageLabel: string
-  messageHint?: string | null
-  messagePlaceholder?: string | null
-  toggleLabel: string
-  toggleDescription?: string | null
-  toggleFile?: {
-    id: string
-    url?: string | null
-    alt?: string | null
-  } | null
-  submitLabel: string
-  endpoint: string
-}
+  image?: MediaFromPayload | null
+} & Omit<ContactFormProps, 'className' | 'serviceOptions' | 'toggleFileUrl'> & {
+    serviceOptions?: FormServiceOptionFromPayload[] | null
+    toggleFile?: MediaFromPayload | null
+  }
 
 type PageFromPayload = {
   id: string
@@ -304,45 +276,38 @@ export default async function HomePage() {
           case 'form': {
             const formBlock = block as FormBlockFromPayload
 
+            const {
+              id,
+              heading,
+              lead,
+              description,
+              image,
+              serviceOptions,
+              toggleFile,
+              ...rawFormProps
+            } = formBlock
+
+            const formProps: ContactFormProps = {
+              ...rawFormProps,
+              serviceOptions: serviceOptions ?? [],
+              toggleFileUrl: toggleFile?.url ?? undefined,
+            }
+
             return (
-              <ContactSection
-                key={formBlock.id}
-                heading={formBlock.heading}
-                lead={formBlock.lead ?? undefined}
-                description={formBlock.description ?? undefined}
-                imageUrl={formBlock.image?.url ?? undefined}
-                imageAlt={formBlock.image?.alt ?? undefined}
-                lastNameLabel={formBlock.lastNameLabel}
-                lastNameHint={formBlock.lastNameHint ?? undefined}
-                lastNamePlaceholder={formBlock.lastNamePlaceholder ?? undefined}
-                firstNameLabel={formBlock.firstNameLabel}
-                firstNameHint={formBlock.firstNameHint ?? undefined}
-                firstNamePlaceholder={formBlock.firstNamePlaceholder ?? undefined}
-                emailLabel={formBlock.emailLabel}
-                emailHint={formBlock.emailHint ?? undefined}
-                emailPlaceholder={formBlock.emailPlaceholder ?? undefined}
-                phoneLabel={formBlock.phoneLabel}
-                phoneHint={formBlock.phoneHint ?? undefined}
-                phonePlaceholder={formBlock.phonePlaceholder ?? undefined}
-                companyLabel={formBlock.companyLabel}
-                companyHint={formBlock.companyHint ?? undefined}
-                companyPlaceholder={formBlock.companyPlaceholder ?? undefined}
-                websiteLabel={formBlock.websiteLabel}
-                websiteHint={formBlock.websiteHint ?? undefined}
-                websitePlaceholder={formBlock.websitePlaceholder ?? undefined}
-                serviceLabel={formBlock.serviceLabel}
-                serviceHint={formBlock.serviceHint ?? undefined}
-                servicePlaceholder={formBlock.servicePlaceholder ?? undefined}
-                serviceOptions={formBlock.serviceOptions ?? []}
-                messageLabel={formBlock.messageLabel}
-                messageHint={formBlock.messageHint ?? undefined}
-                messagePlaceholder={formBlock.messagePlaceholder ?? undefined}
-                toggleLabel={formBlock.toggleLabel}
-                toggleDescription={formBlock.toggleDescription ?? undefined}
-                toggleFileUrl={formBlock.toggleFile?.url ?? undefined}
-                submitLabel={formBlock.submitLabel}
-                endpoint={formBlock.endpoint}
-              />
+              <FormSection
+                key={id}
+                id="ajanlatkeres"
+                heading={heading}
+                lead={lead ?? undefined}
+                description={description ?? undefined}
+                imageUrl={image?.url ?? undefined}
+                imageAlt={image?.alt ?? undefined}
+              >
+                <ContactForm
+                  {...formProps}
+                  className="-mt-20 w-[90%] rounded-md bg-white p-6 shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm sm:-mt-28 sm:w-[80%] lg:-mt-44"
+                />
+              </FormSection>
             )
           }
 
