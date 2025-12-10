@@ -259,8 +259,8 @@ function renderNode(node: LexicalNode, index: number, blockClassName?: string): 
 
       return (
         <figure key={index} className={blockClassName}>
-          <div className="overflow-hidden rounded-md bg-white/90 shadow-sm ring-1 ring-zinc-900/5">
-            <img src={src} alt={alt} loading="lazy" className="h-auto w-full object-cover" />
+          <div className="aspect-video overflow-hidden rounded-md bg-white/90 shadow-sm ring-1 ring-zinc-900/5">
+            <img src={src} alt={alt} loading="lazy" className="h-full w-full object-cover" />
           </div>
           {caption && <figcaption className="mt-3 text-sm text-zinc-500">{caption}</figcaption>}
         </figure>
