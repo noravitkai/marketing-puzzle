@@ -65,6 +65,12 @@ type PageDoc = {
   layout?: (ContactBlockFromPayload | FormBlockFromPayload)[]
 }
 
+type ServiceDoc = {
+  id: string
+  slug: string
+  title: string
+}
+
 export const dynamic = 'force-dynamic'
 
 export default async function ContactPage() {
@@ -84,6 +90,19 @@ export default async function ContactPage() {
   if (!page || !page.layout || !page.layout.length) {
     return null
   }
+
+  const { docs: serviceDocs } = await payload.find({
+    collection: 'services',
+    depth: 0,
+    sort: 'title',
+  })
+
+  const serviceOptions: FormServiceOptionFromPayload[] = (serviceDocs as ServiceDoc[])
+    .filter((service) => Boolean(service.title))
+    .map((service) => ({
+      value: service.slug || service.id,
+      label: service.title,
+    }))
 
   const mainTitle = page.mainTitle || page.title
   const highlightedTitle = page.highlightedTitle ?? undefined
@@ -149,7 +168,6 @@ export default async function ContactPage() {
                 lead,
                 description,
                 image,
-                serviceOptions,
                 toggleFile,
                 showHeader,
                 ...rawFormProps
@@ -157,7 +175,7 @@ export default async function ContactPage() {
 
               const formProps: ContactFormProps = {
                 ...rawFormProps,
-                serviceOptions: serviceOptions ?? [],
+                serviceOptions,
                 toggleFileUrl: toggleFile?.url ?? undefined,
               }
 

@@ -176,9 +176,9 @@ type FormBlockFromPayload = {
   description?: string | null
   image?: MediaFromPayload | null
 } & Omit<ContactFormProps, 'className' | 'serviceOptions' | 'toggleFileUrl'> & {
-  serviceOptions?: FormServiceOptionFromPayload[] | null
-  toggleFile?: MediaFromPayload | null
-}
+    serviceOptions?: FormServiceOptionFromPayload[] | null
+    toggleFile?: MediaFromPayload | null
+  }
 
 type PageFromPayload = {
   id: string
@@ -213,10 +213,11 @@ export default async function HomePage() {
   const [page] = docs
 
   let servicesCards: ServiceCard[] = []
+  let serviceOptions: FormServiceOptionFromPayload[] = []
 
-  const servicesLayoutBlock = page.layout.find(
-    (block) => block.blockType === 'services',
-  ) as ServicesBlockFromPayload | undefined
+  const servicesLayoutBlock = page.layout.find((block) => block.blockType === 'services') as
+    | ServicesBlockFromPayload
+    | undefined
 
   if (servicesLayoutBlock) {
     let serviceDocs: ServiceDoc[] = []
@@ -241,6 +242,28 @@ export default async function HomePage() {
     }
 
     servicesCards = serviceDocs.map(normalizeService)
+    serviceOptions = serviceDocs
+      .filter((service) => Boolean(service.title))
+      .map((service) => ({
+        value: service.slug || service.id,
+        label: service.title,
+      }))
+  }
+
+  if (!serviceOptions.length) {
+    const { docs: fallbackServices } = await payload.find({
+      collection: 'services',
+      depth: 0,
+      sort: 'title',
+    })
+
+    const fallbackServiceDocs = fallbackServices as ServiceDoc[]
+    serviceOptions = fallbackServiceDocs
+      .filter((service) => Boolean(service.title))
+      .map((service) => ({
+        value: service.slug || service.id,
+        label: service.title,
+      }))
   }
 
   return (
@@ -350,7 +373,6 @@ export default async function HomePage() {
               lead,
               description,
               image,
-              serviceOptions,
               toggleFile,
               showHeader,
               ...rawFormProps
@@ -358,7 +380,7 @@ export default async function HomePage() {
 
             const formProps: ContactFormProps = {
               ...rawFormProps,
-              serviceOptions: serviceOptions ?? [],
+              serviceOptions,
               toggleFileUrl: toggleFile?.url ?? undefined,
             }
 
