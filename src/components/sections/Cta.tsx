@@ -119,12 +119,8 @@ export default function CtaSection({
                 {cta.heading}
               </h3>
 
-              <div className="mt-3 space-y-4 text-sm text-zinc-600">
-                {cta.body ? (
-                  <div className="[&_p+p]:mt-3">
-                    <RichText data={cta.body} />
-                  </div>
-                ) : null}
+              <div className="mt-3 text-sm text-zinc-600">
+                {cta.body ? <RichText data={cta.body} className="space-y-3" /> : null}
               </div>
               {hasAnyAction && (
                 <div className="mt-6 flex flex-row items-center justify-start gap-4">
