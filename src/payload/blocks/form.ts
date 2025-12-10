@@ -238,7 +238,7 @@ export const formBlock: Block = {
       name: 'toggleLabel',
       label: 'Kapcsoló címke',
       type: 'text',
-      required: true,
+      required: false,
     },
     {
       name: 'toggleDescription',

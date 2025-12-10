@@ -47,7 +47,7 @@ export type ContactFormProps = {
   messageLabel: string
   messageHint?: string
   messagePlaceholder?: string
-  toggleLabel: string
+  toggleLabel?: string
   toggleDescription?: string
   toggleFileUrl?: string
   submitLabel: string
@@ -150,6 +150,8 @@ export function ContactForm({
       setIsSubmitting(false)
     }
   }
+
+  const hasToggle = Boolean(toggleLabel && toggleLabel.trim())
 
   return (
     <form
@@ -264,19 +266,24 @@ export function ContactForm({
             error={errors['message']}
           />
         </div>
-        <div className="sm:col-span-2">
-          <ToggleGroup
-            id="toggle"
-            name="toggle"
-            label={toggleLabel}
-            description={toggleDescription}
-            labelHref={toggleFileUrl}
-            defaultChecked
-          />
-          {errors['toggle'] ? (
-            <p className="mt-1 text-xs text-red-700">{errors['toggle']}</p>
-          ) : null}
-        </div>
+
+        {hasToggle && toggleLabel && (
+          <div className="sm:col-span-2">
+            <ToggleGroup
+              id="toggle"
+              name="toggle"
+              label={toggleLabel}
+              description={toggleDescription}
+              labelHref={toggleFileUrl}
+              defaultChecked
+              required
+            />
+            {errors['toggle'] ? (
+              <p className="mt-1 text-xs text-red-700">{errors['toggle']}</p>
+            ) : null}
+          </div>
+        )}
+
         <div className="flex justify-start sm:col-span-2">
           <Button
             type="submit"
