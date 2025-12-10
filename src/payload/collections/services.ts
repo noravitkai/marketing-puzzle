@@ -47,5 +47,33 @@ export const servicesCollection: CollectionConfig = {
       label: 'Részletes leírás',
       type: 'richText',
     },
+    {
+      name: 'primaryCtaLabel',
+      label: 'Elsődleges gomb szövege (pl. "Ajánlatkérés")',
+      type: 'text',
+      required: false,
+      defaultValue: 'Ajánlatkérés',
+    },
+    {
+      name: 'primaryCtaHref',
+      label: 'Elsődleges gomb linkje (pl. "/kapcsolat")',
+      type: 'text',
+      required: false,
+      defaultValue: '/kapcsolat',
+    },
+    {
+      name: 'secondaryCtaLabel',
+      label: 'Másodlagos gomb szövege (pl. "További szolgáltatásaink")',
+      type: 'text',
+      required: false,
+      defaultValue: 'További szolgáltatásaink',
+    },
+    {
+      name: 'secondaryCtaHref',
+      label: 'Másodlagos gomb linkje (pl. "/#szolgaltatasok")',
+      type: 'text',
+      required: false,
+      defaultValue: '/#szolgaltatasok',
+    },
   ],
 }

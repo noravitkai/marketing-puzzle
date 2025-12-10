@@ -22,6 +22,10 @@ export type ServiceDoc = {
   body?: any
   tags?: string[] | null
   links?: ServiceLink[]
+  primaryCtaLabel?: string | null
+  primaryCtaHref?: string | null
+  secondaryCtaLabel?: string | null
+  secondaryCtaHref?: string | null
 }
 
 export type NormalizedService = {
