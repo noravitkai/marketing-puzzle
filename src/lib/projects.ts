@@ -43,9 +43,6 @@ export type NormalizedLink = {
 
 export type ProjectsLayoutBlock = {
   blockType: 'projects'
-  mainTitle?: string
-  highlightedTitle?: string
-  description?: string
   mode?: 'all' | 'featured' | 'manual'
   projects?: ProjectDoc[]
 }
@@ -54,6 +51,9 @@ export type PageDoc = {
   id: string
   slug: string
   title: string
+  mainTitle?: string | null
+  highlightedTitle?: string | null
+  headerDescription?: string | null
   layout?: (ProjectsLayoutBlock | any)[]
 }
 
