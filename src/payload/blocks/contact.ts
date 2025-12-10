@@ -8,26 +8,41 @@ export const contactInfoBlock: Block = {
   },
   fields: [
     {
+      name: 'showHeader',
+      label: 'Szekció fejléce megjelenjen?',
+      type: 'checkbox',
+      defaultValue: true,
+    },
+    {
       name: 'heading',
       label: 'Szekció címe',
       type: 'text',
       required: false,
+      admin: {
+        condition: (_, siblingData) => Boolean(siblingData.showHeader),
+      },
     },
     {
       name: 'lead',
       label: 'Alcím',
       type: 'text',
       required: false,
+      admin: {
+        condition: (_, siblingData) => Boolean(siblingData.showHeader),
+      },
     },
     {
       name: 'description',
       label: 'Leírás',
       type: 'textarea',
       required: false,
+      admin: {
+        condition: (_, siblingData) => Boolean(siblingData.showHeader),
+      },
     },
     {
       name: 'image',
-      label: 'Kép (bal oldali nagy kártya)',
+      label: 'Kép',
       type: 'upload',
       relationTo: 'media',
       required: true,
@@ -73,7 +88,7 @@ export const contactInfoBlock: Block = {
     },
     {
       name: 'mapsUrl',
-      label: 'Google Maps URL (kattintható címhez)',
+      label: 'Google Maps link',
       type: 'text',
       required: false,
     },
@@ -97,10 +112,22 @@ export const contactInfoBlock: Block = {
       admin: {
         condition: (_, siblingData) => Boolean(siblingData.showStats),
       },
+      validate: (value, options) => {
+        const siblingData = options?.siblingData as { showStats?: boolean } | undefined
+        const showStats = Boolean(siblingData?.showStats)
+        if (!showStats) {
+          return true
+        }
+        const count = Array.isArray(value) ? value.length : 0
+        if (count !== 4) {
+          return 'Pontosan 4 statisztikát kell megadni.'
+        }
+        return true
+      },
       fields: [
         {
           name: 'value',
-          label: 'Érték/cím',
+          label: 'Érték',
           type: 'text',
           required: true,
         },

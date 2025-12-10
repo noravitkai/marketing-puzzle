@@ -9,7 +9,7 @@ import { teamBlock } from '@/payload/blocks/team'
 import { testimonialsBlock } from '@/payload/blocks/testimonials'
 import { formBlock } from '@/payload/blocks/form'
 import { projectsBlock } from '@/payload/blocks/projects'
-import { contactInfoBlock } from '@/payload/blocks/info'
+import { contactInfoBlock } from '@/payload/blocks/contact'
 import { projectsCollection } from '@/payload/collections/projects'
 
 export default buildConfig({
@@ -71,6 +71,24 @@ export default buildConfig({
           type: 'text',
           required: true,
           unique: true,
+        },
+        {
+          name: 'mainTitle',
+          label: 'Fő címrész',
+          type: 'text',
+          required: false,
+        },
+        {
+          name: 'highlightedTitle',
+          label: 'Kiemelt címrész',
+          type: 'text',
+          required: false,
+        },
+        {
+          name: 'headerDescription',
+          label: 'Leírás',
+          type: 'textarea',
+          required: false,
         },
         {
           name: 'layout',

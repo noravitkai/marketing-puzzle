@@ -125,7 +125,8 @@ type MediaFromPayload = {
 type FormBlockFromPayload = {
   id: string
   blockType: 'form'
-  heading: string
+  showHeader?: boolean | null
+  heading?: string | null
   lead?: string | null
   description?: string | null
   image?: MediaFromPayload | null
@@ -284,6 +285,7 @@ export default async function HomePage() {
               image,
               serviceOptions,
               toggleFile,
+              showHeader,
               ...rawFormProps
             } = formBlock
 
@@ -293,13 +295,15 @@ export default async function HomePage() {
               toggleFileUrl: toggleFile?.url ?? undefined,
             }
 
+            const shouldShowHeader = showHeader !== false
+
             return (
               <FormSection
                 key={id}
-                id="ajanlatkeres"
-                heading={heading}
-                lead={lead ?? undefined}
-                description={description ?? undefined}
+                id="konzultacio"
+                heading={shouldShowHeader ? (heading ?? undefined) : undefined}
+                lead={shouldShowHeader ? (lead ?? undefined) : undefined}
+                description={shouldShowHeader ? (description ?? undefined) : undefined}
                 imageUrl={image?.url ?? undefined}
                 imageAlt={image?.alt ?? undefined}
               >

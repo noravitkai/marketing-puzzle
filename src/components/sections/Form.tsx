@@ -4,7 +4,7 @@ import { Heading, Lead, Paragraph } from '@/components/ui/Text'
 
 type FormSectionProps = {
   id?: string
-  heading: string
+  heading?: string
   lead?: string
   description?: string
   imageUrl?: string
@@ -22,17 +22,20 @@ export function FormSection({
   children,
 }: FormSectionProps) {
   const hasImage = Boolean(imageUrl)
+  const hasHeader = Boolean(heading || lead || description)
 
   return (
     <section id={id}>
       <Container className="mt-16 sm:mt-20">
-        <div className="flex flex-col items-center gap-6 text-center">
-          <Heading as="h2">{heading}</Heading>
-          {lead ? <Lead as="p">{lead}</Lead> : null}
-          {description ? <Paragraph className="max-w-2xl">{description}</Paragraph> : null}
-        </div>
+        {hasHeader ? (
+          <div className="flex flex-col items-center gap-6 text-center">
+            {heading ? <Heading as="h2">{heading}</Heading> : null}
+            {lead ? <Lead as="p">{lead}</Lead> : null}
+            {description ? <Paragraph className="max-w-2xl">{description}</Paragraph> : null}
+          </div>
+        ) : null}
         {hasImage ? (
-          <div className="mt-8">
+          <div className={hasHeader ? 'mt-8' : ''}>
             <div className="relative aspect-3/1 overflow-hidden rounded-md shadow-sm ring-1 ring-zinc-900/5">
               <Image
                 src={imageUrl as string}
@@ -45,7 +48,9 @@ export function FormSection({
             <div className="flex justify-center">{children}</div>
           </div>
         ) : (
-          <div className="mt-8 flex justify-center">{children}</div>
+          <div className={hasHeader ? 'mt-8 flex justify-center' : 'flex justify-center'}>
+            {children}
+          </div>
         )}
       </Container>
     </section>
