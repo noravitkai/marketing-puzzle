@@ -54,7 +54,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
     <Container className="mt-9">
       <div className="mx-auto max-w-2xl">
         <article>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-8">
             <Link
               href="/#szolgaltatasok"
               aria-label="Vissza a szolgáltatásokhoz"

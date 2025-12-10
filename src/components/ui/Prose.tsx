@@ -152,7 +152,7 @@ function renderNode(node: LexicalNode, index: number, blockClassName?: string): 
 
       if (isChecklist) {
         return (
-          <ul key={index} className={clsx('list-none space-y-1', blockClassName)}>
+          <ul key={index} className={clsx('list-none space-y-4', blockClassName)}>
             {node.children?.map((item, itemIndex) => {
               const checked = Boolean(item.checked)
 
@@ -181,7 +181,7 @@ function renderNode(node: LexicalNode, index: number, blockClassName?: string): 
         <ListTag
           key={index}
           className={clsx(
-            'space-y-1 pl-5',
+            'space-y-4 pl-5',
             'list-outside',
             isOrdered ? 'list-decimal' : 'list-disc',
             blockClassName,
@@ -291,13 +291,19 @@ export function Prose({ value, className }: ProseProps) {
       {rootChildren.map((node, index) => {
         const isHeading = node.type === 'heading'
         const isFirst = index === 0
-        const blockClassName = isHeading
-          ? isFirst
-            ? 'mt-0 mb-6'
-            : 'my-6'
-          : isFirst
-            ? 'mt-0 mb-3'
-            : 'my-3'
+        const isLast = index === rootChildren.length - 1
+
+        let blockClassName: string
+
+        if (isHeading) {
+          const mt = isFirst ? 'mt-0' : 'mt-6'
+          const mb = isLast ? 'mb-0' : 'mb-6'
+          blockClassName = `${mt} ${mb}`
+        } else {
+          const mt = isFirst ? 'mt-0' : 'mt-4'
+          const mb = isLast ? 'mb-0' : 'mb-4'
+          blockClassName = `${mt} ${mb}`
+        }
 
         return renderNode(node as LexicalNode, index, blockClassName)
       })}
