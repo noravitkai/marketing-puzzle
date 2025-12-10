@@ -24,12 +24,6 @@ export const servicesCollection: CollectionConfig = {
       unique: true,
     },
     {
-      name: 'category',
-      label: 'Kategória',
-      type: 'text',
-      required: false,
-    },
-    {
       name: 'excerpt',
       label: 'Rövid leírás',
       type: 'textarea',
@@ -52,6 +46,34 @@ export const servicesCollection: CollectionConfig = {
       name: 'body',
       label: 'Részletes leírás',
       type: 'richText',
+    },
+    {
+      name: 'primaryCtaLabel',
+      label: 'Elsődleges gomb szövege',
+      type: 'text',
+      required: false,
+      defaultValue: 'Ajánlatkérés',
+    },
+    {
+      name: 'primaryCtaHref',
+      label: 'Elsődleges gomb linkje',
+      type: 'text',
+      required: false,
+      defaultValue: '/kapcsolat',
+    },
+    {
+      name: 'secondaryCtaLabel',
+      label: 'Másodlagos gomb szövege',
+      type: 'text',
+      required: false,
+      defaultValue: 'További szolgáltatásaink',
+    },
+    {
+      name: 'secondaryCtaHref',
+      label: 'Másodlagos gomb linkje',
+      type: 'text',
+      required: false,
+      defaultValue: '/#szolgaltatasok',
     },
   ],
 }
