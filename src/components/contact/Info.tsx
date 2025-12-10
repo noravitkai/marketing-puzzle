@@ -14,7 +14,7 @@ type ContactInfoProps = {
   heading?: string
   lead?: string
   description?: string
-  imageUrl?: string
+  imageUrl: string
   imageAlt?: string
   phoneTitle?: string
   phoneNumber?: string
@@ -46,21 +46,21 @@ export default function ContactInfo({
   const items = [
     {
       id: 'phone',
-      icon: <DevicePhoneMobileIcon className="text-primary h-6 w-6" />,
+      Icon: DevicePhoneMobileIcon,
       title: phoneTitle,
       content: phoneNumber,
       href: phoneNumber ? `tel:${phoneNumber.replace(/\s+/g, '')}` : undefined,
     },
     {
       id: 'email',
-      icon: <AtSymbolIcon className="text-primary h-6 w-6" />,
+      Icon: AtSymbolIcon,
       title: emailTitle,
       content: emailAddress,
       href: emailAddress ? `mailto:${emailAddress}` : undefined,
     },
     {
       id: 'address',
-      icon: <MapPinIcon className="text-primary h-6 w-6" />,
+      Icon: MapPinIcon,
       title: addressTitle,
       content: addressText,
       href: mapsUrl || undefined,
@@ -70,7 +70,7 @@ export default function ContactInfo({
   const hasStats = showStats && stats && stats.length > 0
 
   return (
-    <section id="kapcsolat-info">
+    <section id="elerhetosegek">
       <Container className="mt-9">
         <div className="flex flex-col items-center gap-4 text-center">
           {heading && <Heading>{heading}</Heading>}
@@ -78,11 +78,12 @@ export default function ContactInfo({
           {description && <Paragraph className="max-w-2xl">{description}</Paragraph>}
         </div>
         <div className="mt-8 grid gap-4 xl:grid-cols-2 xl:items-stretch">
-          <CardContainer className="relative h-64 w-full overflow-hidden p-0 sm:h-72 md:h-80 xl:h-full xl:min-h-80">
+          <CardContainer className="relative aspect-3/1 w-full overflow-hidden p-0">
             <Image
-              src={imageUrl || '/images/contact-office.jpg'}
-              alt={imageAlt || 'Marketing Puzzle iroda'}
+              src={imageUrl}
+              alt={imageAlt || 'Marketing Puzzle kreatív marketingügynökség'}
               fill
+              sizes="(min-width: 1024px) 64rem, 100vw"
               className="object-cover"
             />
           </CardContainer>
@@ -107,6 +108,8 @@ export default function ContactInfo({
                 .filter(Boolean)
                 .join(' ')
 
+              const Icon = item.Icon
+
               return (
                 <CardContainer
                   key={item.id}
@@ -120,13 +123,11 @@ export default function ContactInfo({
                     : {})}
                   className={className}
                 >
-                  <div className="mb-2 h-6 w-6">{item.icon}</div>
-
-                  <div className="space-y-1">
+                  <div className="flex flex-col gap-1">
+                    <Icon className="text-primary h-5 w-5" />
                     {item.title && <CardTitle>{item.title}</CardTitle>}
-
                     {item.content && (
-                      <CardDescription className="whitespace-pre-line text-zinc-700">
+                      <CardDescription className="whitespace-pre-line">
                         {item.content}
                       </CardDescription>
                     )}
@@ -137,14 +138,14 @@ export default function ContactInfo({
           </div>
         </div>
         {hasStats && (
-          <div className="mt-10">
-            <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
+          <div className="mt-8">
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
               {stats!.map((stat) => (
-                <div key={stat.id} className="sm:border-l sm:border-zinc-200 sm:pl-6">
-                  <div className="text-3xl font-semibold tracking-tight text-zinc-600">
+                <div key={stat.id} className="border-l border-zinc-900/5 pl-4">
+                  <div className="text-2xl leading-none font-semibold tracking-tighter text-zinc-800 sm:text-3xl">
                     {stat.value}
                   </div>
-                  <p className="mt-2 text-sm whitespace-pre-line text-zinc-600">{stat.label}</p>
+                  <p className="mt-1 text-sm whitespace-pre-line text-zinc-600">{stat.label}</p>
                 </div>
               ))}
             </div>
