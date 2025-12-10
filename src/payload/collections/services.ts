@@ -24,12 +24,6 @@ export const servicesCollection: CollectionConfig = {
       unique: true,
     },
     {
-      name: 'category',
-      label: 'Kategória',
-      type: 'text',
-      required: false,
-    },
-    {
       name: 'excerpt',
       label: 'Rövid leírás',
       type: 'textarea',
