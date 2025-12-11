@@ -7,15 +7,15 @@ import { getProjectsIndexData } from '@/lib/projects'
 export const dynamic = 'force-dynamic'
 
 export default async function ProjectsPage() {
-  const { page, projectsBlock, projects } = await getProjectsIndexData()
+  const { page, projects } = await getProjectsIndexData()
 
   if (!projects.length) {
     return null
   }
 
-  const mainTitle = projectsBlock?.mainTitle || page?.title || 'Esettanulmányok, eredmények.'
-  const highlightedTitle = projectsBlock?.highlightedTitle
-  const description = projectsBlock?.description
+  const mainTitle = page?.mainTitle || page?.title || 'Esettanulmányok, eredmények.'
+  const highlightedTitle = page?.highlightedTitle ?? undefined
+  const description = page?.headerDescription ?? undefined
 
   return (
     <section id="projektek">
@@ -27,7 +27,7 @@ export default async function ProjectsPage() {
           </Lead>
           {description ? <Paragraph className="max-w-2xl">{description}</Paragraph> : null}
         </header>
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:gap-8 md:grid-cols-2">
+        <div className="mt-16 grid grid-cols-1 gap-4 sm:mt-20 sm:gap-8 md:grid-cols-2">
           {projects.map((project) => (
             <SecondaryCard
               key={project.slug}

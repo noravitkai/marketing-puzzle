@@ -8,24 +8,6 @@ export const projectsBlock: Block = {
   },
   fields: [
     {
-      name: 'mainTitle',
-      label: 'Fő címrész',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'highlightedTitle',
-      label: 'Kiemelt címrész',
-      type: 'text',
-      required: false,
-    },
-    {
-      name: 'description',
-      label: 'Leírás',
-      type: 'textarea',
-      required: false,
-    },
-    {
       name: 'mode',
       label: 'Megjelenítendő projektek',
       type: 'select',

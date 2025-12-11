@@ -65,6 +65,12 @@ type PageDoc = {
   layout?: (ContactBlockFromPayload | FormBlockFromPayload)[]
 }
 
+type ServiceDoc = {
+  id: string
+  slug: string
+  title: string
+}
+
 export const dynamic = 'force-dynamic'
 
 export default async function ContactPage() {
@@ -85,107 +91,117 @@ export default async function ContactPage() {
     return null
   }
 
+  const { docs: serviceDocs } = await payload.find({
+    collection: 'services',
+    depth: 0,
+    sort: 'title',
+  })
+
+  const serviceOptions: FormServiceOptionFromPayload[] = (serviceDocs as ServiceDoc[])
+    .filter((service) => Boolean(service.title))
+    .map((service) => ({
+      value: service.slug || service.id,
+      label: service.title,
+    }))
+
   const mainTitle = page.mainTitle || page.title
   const highlightedTitle = page.highlightedTitle ?? undefined
   const description = page.headerDescription ?? undefined
 
   return (
     <>
-      <section id="kapcsolat">
-        <Container className="mt-9">
-          <header className="flex flex-col items-center gap-6 text-center">
-            <Lead as="h1">
-              {mainTitle}{' '}
-              {highlightedTitle ? <span className="text-primary">{highlightedTitle}</span> : null}
-            </Lead>
-            {description ? <Paragraph className="max-w-2xl">{description}</Paragraph> : null}
-          </header>
-        </Container>
+      <Container className="mt-9">
+        <header className="flex flex-col items-center gap-6 text-center">
+          <Lead as="h1">
+            {mainTitle}{' '}
+            {highlightedTitle ? <span className="text-primary">{highlightedTitle}</span> : null}
+          </Lead>
+          {description ? <Paragraph className="max-w-2xl">{description}</Paragraph> : null}
+        </header>
+      </Container>
 
-        {page.layout.map((block) => {
-          switch (block.blockType) {
-            case 'contactInfo': {
-              const contactBlock = block as ContactBlockFromPayload
+      {page.layout.map((block) => {
+        switch (block.blockType) {
+          case 'contactInfo': {
+            const contactBlock = block as ContactBlockFromPayload
 
-              if (!contactBlock.image?.url) {
-                return null
-              }
-
-              const statsEnabled = contactBlock.showStats === true
-              const stats = statsEnabled ? (contactBlock.stats ?? []) : []
-              const showHeader = contactBlock.showHeader !== false // default: show
-
-              return (
-                <ContactInfo
-                  key={contactBlock.id}
-                  heading={showHeader ? (contactBlock.heading ?? undefined) : undefined}
-                  lead={showHeader ? (contactBlock.lead ?? undefined) : undefined}
-                  description={showHeader ? (contactBlock.description ?? undefined) : undefined}
-                  imageUrl={contactBlock.image.url}
-                  imageAlt={contactBlock.image.alt ?? undefined}
-                  phoneTitle={contactBlock.phoneTitle}
-                  phoneNumber={contactBlock.phoneNumber}
-                  emailTitle={contactBlock.emailTitle}
-                  emailAddress={contactBlock.emailAddress}
-                  addressTitle={contactBlock.addressTitle}
-                  addressText={contactBlock.addressText}
-                  mapsUrl={contactBlock.mapsUrl ?? undefined}
-                  showStats={statsEnabled}
-                  stats={stats.map((item) => ({
-                    id: item.id,
-                    value: item.value,
-                    label: item.label,
-                  }))}
-                />
-              )
-            }
-
-            case 'form': {
-              const formBlock = block as FormBlockFromPayload
-
-              const {
-                id,
-                heading,
-                lead,
-                description,
-                image,
-                serviceOptions,
-                toggleFile,
-                showHeader,
-                ...rawFormProps
-              } = formBlock
-
-              const formProps: ContactFormProps = {
-                ...rawFormProps,
-                serviceOptions: serviceOptions ?? [],
-                toggleFileUrl: toggleFile?.url ?? undefined,
-              }
-
-              const shouldShowHeader = showHeader !== false
-
-              return (
-                <FormSection
-                  key={id}
-                  id="ajanlatkeres"
-                  heading={shouldShowHeader ? (heading ?? undefined) : undefined}
-                  lead={shouldShowHeader ? (lead ?? undefined) : undefined}
-                  description={shouldShowHeader ? (description ?? undefined) : undefined}
-                  imageUrl={image?.url ?? undefined}
-                  imageAlt={image?.alt ?? undefined}
-                >
-                  <ContactForm
-                    {...formProps}
-                    className="-mt-20 w-[90%] rounded-md bg-white p-6 shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm sm:-mt-28 sm:w-[80%] lg:-mt-44"
-                  />
-                </FormSection>
-              )
-            }
-
-            default:
+            if (!contactBlock.image?.url) {
               return null
+            }
+
+            const statsEnabled = contactBlock.showStats === true
+            const stats = statsEnabled ? (contactBlock.stats ?? []) : []
+            const showHeader = contactBlock.showHeader !== false // default: show
+
+            return (
+              <ContactInfo
+                key={contactBlock.id}
+                heading={showHeader ? (contactBlock.heading ?? undefined) : undefined}
+                lead={showHeader ? (contactBlock.lead ?? undefined) : undefined}
+                description={showHeader ? (contactBlock.description ?? undefined) : undefined}
+                imageUrl={contactBlock.image.url}
+                imageAlt={contactBlock.image.alt ?? undefined}
+                phoneTitle={contactBlock.phoneTitle}
+                phoneNumber={contactBlock.phoneNumber}
+                emailTitle={contactBlock.emailTitle}
+                emailAddress={contactBlock.emailAddress}
+                addressTitle={contactBlock.addressTitle}
+                addressText={contactBlock.addressText}
+                mapsUrl={contactBlock.mapsUrl ?? undefined}
+                showStats={statsEnabled}
+                stats={stats.map((item) => ({
+                  id: item.id,
+                  value: item.value,
+                  label: item.label,
+                }))}
+              />
+            )
           }
-        })}
-      </section>
+
+          case 'form': {
+            const formBlock = block as FormBlockFromPayload
+
+            const {
+              id,
+              heading,
+              lead,
+              description,
+              image,
+              toggleFile,
+              showHeader,
+              ...rawFormProps
+            } = formBlock
+
+            const formProps: ContactFormProps = {
+              ...rawFormProps,
+              serviceOptions,
+              toggleFileUrl: toggleFile?.url ?? undefined,
+            }
+
+            const shouldShowHeader = showHeader !== false
+
+            return (
+              <FormSection
+                key={id}
+                id="ajanlatkeres"
+                heading={shouldShowHeader ? (heading ?? undefined) : undefined}
+                lead={shouldShowHeader ? (lead ?? undefined) : undefined}
+                description={shouldShowHeader ? (description ?? undefined) : undefined}
+                imageUrl={image?.url ?? undefined}
+                imageAlt={image?.alt ?? undefined}
+              >
+                <ContactForm
+                  {...formProps}
+                  className="-mt-20 w-[90%] rounded-md bg-white p-6 shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm sm:-mt-28 sm:w-[80%] lg:-mt-44"
+                />
+              </FormSection>
+            )
+          }
+
+          default:
+            return null
+        }
+      })}
     </>
   )
 }

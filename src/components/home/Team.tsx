@@ -13,7 +13,7 @@ export type TeamMember = {
 }
 
 type TeamProps = {
-  heading: string
+  heading?: string
   lead?: string
   description?: string
   members: TeamMember[]
@@ -48,16 +48,19 @@ export default function Team({ heading, lead, description, members }: TeamProps)
   }
 
   const tiltVariants = ['rotate-0', 'rotate-1', '-rotate-1', 'rotate-1', 'rotate-0', '-rotate-1']
+  const hasHeader = Boolean(heading || lead || description)
 
   return (
     <section id="csapat">
       <Container className="mt-16 sm:mt-20">
-        <div className="flex flex-col items-center gap-6 text-center">
-          <Heading as="h2">{heading}</Heading>
-          {lead ? <Lead as="p">{lead}</Lead> : null}
-          {description ? <Paragraph className="max-w-2xl">{description}</Paragraph> : null}
-        </div>
-        <div className="mt-8 px-0 md:px-2">
+        {hasHeader ? (
+          <div className="flex flex-col items-center gap-6 text-center">
+            {heading ? <Heading as="h2">{heading}</Heading> : null}
+            {lead ? <Lead as="p">{lead}</Lead> : null}
+            {description ? <Paragraph className="max-w-2xl">{description}</Paragraph> : null}
+          </div>
+        ) : null}
+        <div className={hasHeader ? 'mt-8 px-0 md:px-2' : 'px-0 md:px-2'}>
           <ul role="list" className="grid grid-cols-2 gap-4 sm:gap-8 xl:grid-cols-3">
             {members.map((member, index) => {
               if (!member.imageUrl) return null
