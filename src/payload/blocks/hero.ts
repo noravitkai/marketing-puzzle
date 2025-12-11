@@ -12,64 +12,47 @@ export const heroBlock: Block = {
       label: 'Fő címrész',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'highlightedTitle',
       label: 'Kiemelt címrész',
       type: 'text',
       required: false,
+      localized: true,
     },
     {
       name: 'description',
       label: 'Leírás',
       type: 'textarea',
       required: true,
+      localized: true,
     },
     {
       name: 'primaryCtaLabel',
       label: 'Elsődleges gomb szöveg',
       type: 'text',
       required: false,
+      localized: true,
     },
     {
       name: 'primaryCtaUrl',
       label: 'Elsődleges gomb link',
       type: 'text',
       required: false,
-      validate: (value: unknown, { siblingData }: { siblingData: any }) => {
-        const label = siblingData?.primaryCtaLabel ? String(siblingData.primaryCtaLabel).trim() : ''
-        const url = typeof value === 'string' ? value.trim() : ''
-
-        if (label && !url) {
-          return 'Linket is adj meg.'
-        }
-
-        return true
-      },
     },
     {
       name: 'secondaryCtaLabel',
       label: 'Másodlagos gomb szöveg',
       type: 'text',
       required: false,
+      localized: true,
     },
     {
       name: 'secondaryCtaUrl',
       label: 'Másodlagos gomb link',
       type: 'text',
       required: false,
-      validate: (value: unknown, { siblingData }: { siblingData: any }) => {
-        const label = siblingData?.secondaryCtaLabel
-          ? String(siblingData.secondaryCtaLabel).trim()
-          : ''
-        const url = typeof value === 'string' ? value.trim() : ''
-
-        if (label && !url) {
-          return 'Linket is adj meg.'
-        }
-
-        return true
-      },
     },
     {
       name: 'cards',
@@ -94,6 +77,7 @@ export const heroBlock: Block = {
           label: 'Címke szöveg',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'service',

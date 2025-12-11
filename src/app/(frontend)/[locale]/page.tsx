@@ -10,6 +10,7 @@ import CtaSection from '@/components/sections/Cta'
 import { getPayloadClient } from '@/payload/getPayloadClient'
 import type { SerializedEditorState } from 'lexical'
 import { ArrowRightIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
+import type { Locale } from '@/i18n/config'
 
 type Media = {
   id: string
@@ -196,7 +197,8 @@ type PageFromPayload = {
   )[]
 }
 
-export default async function HomePage() {
+export default async function HomePage({ params }: { params: { locale: Locale } }) {
+  const { locale } = params
   const payload = await getPayloadClient()
 
   const result = await payload.find({
@@ -208,6 +210,7 @@ export default async function HomePage() {
         equals: 'fooldal',
       },
     },
+    locale,
   })
 
   const docs = result.docs as PageFromPayload[]

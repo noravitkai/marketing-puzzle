@@ -14,6 +14,7 @@ import { contactInfoBlock } from '@/payload/blocks/contact'
 import { projectsCollection } from '@/payload/collections/projects'
 import { servicesCollection } from '@/payload/collections/services'
 import { teamMembersCollection } from '@/payload/collections/teamMembers'
+import { locales, defaultLocale } from '@/i18n/config'
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
@@ -23,6 +24,12 @@ export default buildConfig({
 
   admin: {
     user: 'users',
+  },
+
+  localization: {
+    locales: [...locales],
+    defaultLocale,
+    fallback: true,
   },
 
   collections: [
