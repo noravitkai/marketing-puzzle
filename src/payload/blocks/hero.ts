@@ -40,6 +40,14 @@ export const heroBlock: Block = {
       label: 'Elsődleges gomb link',
       type: 'text',
       required: false,
+      validate: (value: unknown, { siblingData }: { siblingData: any }) => {
+        const label = siblingData?.primaryCtaLabel ? String(siblingData.primaryCtaLabel).trim() : ''
+        const url = typeof value === 'string' ? value.trim() : ''
+        if (label && !url) {
+          return 'Linket is adj meg.'
+        }
+        return true
+      },
     },
     {
       name: 'secondaryCtaLabel',
@@ -53,6 +61,16 @@ export const heroBlock: Block = {
       label: 'Másodlagos gomb link',
       type: 'text',
       required: false,
+      validate: (value: unknown, { siblingData }: { siblingData: any }) => {
+        const label = siblingData?.secondaryCtaLabel
+          ? String(siblingData.secondaryCtaLabel).trim()
+          : ''
+        const url = typeof value === 'string' ? value.trim() : ''
+        if (label && !url) {
+          return 'Linket is adj meg.'
+        }
+        return true
+      },
     },
     {
       name: 'cards',

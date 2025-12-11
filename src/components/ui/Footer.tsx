@@ -1,7 +1,13 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
+import { usePathname } from 'next/navigation'
 import { ContainerInner, ContainerOuter } from '@/components/ui/Container'
+import { localizedPath, type RouteKey } from '@/i18n/paths'
+import { useT } from '@/i18n/I18nProvider'
+import { getLocaleFromPathname } from '@/i18n/url'
 
 const NAV_GLOW_CLASSES = 'rounded-full bg-primary/30 blur-md transition duration-500 ease-in-out'
 
@@ -9,15 +15,27 @@ function glowStateClasses() {
   return 'scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100'
 }
 
-const NAV_ITEMS = [
-  { href: '/', label: 'Főoldal' },
-  { href: '/szolgaltatasok', label: 'Szolgáltatások' },
-  { href: '/projektek', label: 'Projektek' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/karrier', label: 'Karrier' },
-  { href: '/adatkezeles', label: 'Adatkezelés' },
-  { href: '/impresszum', label: 'Impresszum' },
-  { href: '/sutik', label: 'Sütik' },
+type NavItem =
+  | {
+      kind: 'route'
+      routeKey: RouteKey
+      messageKey: string
+    }
+  | {
+      kind: 'static'
+      path: string
+      messageKey: string
+    }
+
+const NAV_ITEMS: NavItem[] = [
+  { kind: 'route', routeKey: 'home', messageKey: 'nav.homeLinkLabel' },
+  { kind: 'route', routeKey: 'services', messageKey: 'nav.servicesLinkLabel' },
+  { kind: 'route', routeKey: 'projects', messageKey: 'nav.projectsLinkLabel' },
+  { kind: 'route', routeKey: 'blog', messageKey: 'nav.blogLinkLabel' },
+  { kind: 'static', path: '/career', messageKey: 'footer.careerLinkLabel' },
+  { kind: 'static', path: '/privacy', messageKey: 'footer.privacyLinkLabel' },
+  { kind: 'static', path: '/imprint', messageKey: 'footer.imprintLinkLabel' },
+  { kind: 'static', path: '/cookies', messageKey: 'footer.cookiesLinkLabel' },
 ]
 
 function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
@@ -70,6 +88,12 @@ function SocialLink({
 
 export function Footer() {
   const year = new Date().getFullYear()
+  const pathname = usePathname()
+  const locale = getLocaleFromPathname(pathname)
+  const t = useT()
+
+  const homeHref = localizedPath('home', locale)
+
   const socials = [
     {
       href: 'https://www.facebook.com/marketingpuzzlecreatives',
@@ -151,6 +175,19 @@ export function Footer() {
     },
   ]
 
+  const logoAlt = t('header.logoImageAlt')
+  const copyrightText = t('footer.copyrightText')
+
+  const navItemsWithHref = NAV_ITEMS.map((item) => {
+    const href =
+      item.kind === 'route' ? localizedPath(item.routeKey, locale) : `/${locale}${item.path}`
+
+    return {
+      href,
+      label: t(item.messageKey),
+    }
+  })
+
   return (
     <footer className="mt-16 flex-none sm:mt-20">
       <ContainerOuter>
@@ -158,10 +195,10 @@ export function Footer() {
           <ContainerInner>
             <div className="flex flex-col gap-6 pt-16 pb-8 sm:pt-20 sm:pb-10">
               <div className="flex justify-center">
-                <Link href="/" className="inline-flex items-center">
+                <Link href={homeHref} className="inline-flex items-center">
                   <Image
                     src="/marketing-puzzle-logo-szines-fekvo.svg"
-                    alt="Marketing Puzzle"
+                    alt={logoAlt}
                     width={170}
                     height={40}
                     className="h-9 w-auto"
@@ -169,13 +206,15 @@ export function Footer() {
                   />
                 </Link>
               </div>
+
               <ul className="flex flex-wrap justify-center gap-3 text-sm md:gap-5 lg:gap-7">
-                {NAV_ITEMS.map((item) => (
+                {navItemsWithHref.map((item) => (
                   <li key={item.href}>
                     <NavLink href={item.href}>{item.label}</NavLink>
                   </li>
                 ))}
               </ul>
+
               <div className="flex justify-center gap-3 md:gap-5">
                 {socials.map((social, index) => {
                   const tiltClassName = index % 2 === 0 ? 'hover:rotate-5' : 'hover:-rotate-5'
@@ -191,8 +230,9 @@ export function Footer() {
                   )
                 })}
               </div>
+
               <p className="text-center text-xs text-zinc-400">
-                &copy; {year}. Marketing Puzzle. Minden jog fenntartva.
+                &copy; {year}. Marketing Puzzle. {copyrightText}
               </p>
             </div>
           </ContainerInner>

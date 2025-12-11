@@ -21,6 +21,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      { source: '/hu/kapcsolat', destination: '/hu/contact' },
+      { source: '/hu/projektek', destination: '/hu/projects' },
+      { source: '/hu/szolgaltatasok', destination: '/hu/services' },
+      { source: '/kapcsolat', destination: '/hu/contact' },
+      { source: '/projektek', destination: '/hu/projects' },
+      { source: '/szolgaltatasok', destination: '/hu/services' },
+      { source: '/hu/projektek/:slug', destination: '/hu/projects/:slug' },
+      { source: '/hu/szolgaltatasok/:slug', destination: '/hu/services/:slug' },
+      { source: '/projektek/:slug', destination: '/hu/projects/:slug' },
+      { source: '/szolgaltatasok/:slug', destination: '/hu/services/:slug' },
+    ]
+  },
 }
 
 export default withPayload(nextConfig)

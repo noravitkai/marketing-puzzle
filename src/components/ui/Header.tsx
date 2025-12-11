@@ -3,19 +3,14 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Container } from '@/components/ui/Container'
 import { Popover, PopoverButton, PopoverBackdrop, PopoverPanel } from '@headlessui/react'
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
-
-const NAV_ITEMS = [
-  { href: '/', label: 'Főoldal' },
-  { href: '/szolgaltatasok', label: 'Szolgáltatások' },
-  { href: '/projektek', label: 'Projektek' },
-  { href: '/kapcsolat', label: 'Kapcsolat' },
-  { href: '/blog', label: 'Blog' },
-]
+import { useT } from '@/i18n/I18nProvider'
+import { localizedPath, type RouteKey } from '@/i18n/paths'
+import { getLocaleFromPathname, switchLocaleInPath } from '@/i18n/url'
 
 const NAV_GLOW_CLASSES = 'rounded-full bg-primary/30 blur-md transition duration-500 ease-in-out'
 
@@ -27,6 +22,19 @@ const FOCUS_RING_PRIMARY =
 
 const SCROLL_DELTA = 5
 
+type NavItem = {
+  routeKey: RouteKey
+  messageKey: string
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { routeKey: 'home', messageKey: 'nav.homeLinkLabel' },
+  { routeKey: 'services', messageKey: 'nav.servicesLinkLabel' },
+  { routeKey: 'projects', messageKey: 'nav.projectsLinkLabel' },
+  { routeKey: 'contact', messageKey: 'nav.contactLinkLabel' },
+  { routeKey: 'blog', messageKey: 'nav.blogLinkLabel' },
+]
+
 function glowStateClasses(active: boolean) {
   return active
     ? 'scale-100 opacity-100'
@@ -36,29 +44,38 @@ function glowStateClasses(active: boolean) {
 function useHideOnScroll() {
   const [visible, setVisible] = React.useState(true)
   const lastScrollY = React.useRef(0)
+
   React.useEffect(() => {
     if (typeof window === 'undefined') return
     lastScrollY.current = window.scrollY
+
     function onScroll() {
       const current = window.scrollY
       const diff = current - lastScrollY.current
       if (Math.abs(diff) < SCROLL_DELTA) return
+
       if (current < 64 || diff < 0) {
         setVisible(true)
       } else {
         setVisible(false)
       }
+
       lastScrollY.current = current
     }
+
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
   return visible
 }
 
-function MobileNavItem({ href, children }: { href: string; children: React.ReactNode }) {
+function MobileNavItem({ routeKey, children }: { routeKey: RouteKey; children: React.ReactNode }) {
   const pathname = usePathname()
+  const locale = getLocaleFromPathname(pathname)
+  const href = localizedPath(routeKey, locale)
   const isActive = pathname === href
+
   return (
     <li>
       <PopoverButton
@@ -77,6 +94,12 @@ function MobileNavItem({ href, children }: { href: string; children: React.React
 }
 
 function MobileNavigation(props: React.ComponentPropsWithoutRef<typeof Popover>) {
+  const t = useT()
+
+  const labelMenuButton = t('header.mobileMenuButtonLabel', 'Menü')
+  const labelMenuHeading = t('header.mobileMenuTitleHeading', 'Menü')
+  const logoAlt = t('header.logoImageAlt', 'Marketing Puzzle logó')
+
   return (
     <Popover {...props}>
       <PopoverButton
@@ -87,13 +110,13 @@ function MobileNavigation(props: React.ComponentPropsWithoutRef<typeof Popover>)
       >
         <Image
           src="/marketing-puzzle-ikon-szines-fekvo.svg"
-          alt="Marketing Puzzle logó"
+          alt={logoAlt}
           width={24}
           height={24}
           className="h-5 w-auto"
           priority
         />
-        <span>Menü</span>
+        <span>{labelMenuButton}</span>
         <ChevronDownIcon className="h-4 w-4" />
       </PopoverButton>
       <PopoverBackdrop
@@ -112,13 +135,13 @@ function MobileNavigation(props: React.ComponentPropsWithoutRef<typeof Popover>)
           >
             <XMarkIcon className="h-6 w-6 text-zinc-500" />
           </PopoverButton>
-          <h2 className="text-sm font-medium text-zinc-600">Menü</h2>
+          <h2 className="text-sm font-medium text-zinc-600">{labelMenuHeading}</h2>
         </div>
         <nav className="mt-6">
           <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800">
             {NAV_ITEMS.map((item) => (
-              <MobileNavItem key={item.href} href={item.href}>
-                {item.label}
+              <MobileNavItem key={item.routeKey} routeKey={item.routeKey}>
+                {t(item.messageKey)}
               </MobileNavItem>
             ))}
           </ul>
@@ -128,9 +151,12 @@ function MobileNavigation(props: React.ComponentPropsWithoutRef<typeof Popover>)
   )
 }
 
-function DesktopNavItem({ href, children }: { href: string; children: React.ReactNode }) {
+function DesktopNavItem({ routeKey, children }: { routeKey: RouteKey; children: React.ReactNode }) {
   const pathname = usePathname()
+  const locale = getLocaleFromPathname(pathname)
+  const href = localizedPath(routeKey, locale)
   const isActive = pathname === href
+
   return (
     <li>
       <Link
@@ -158,18 +184,26 @@ function DesktopNavItem({ href, children }: { href: string; children: React.Reac
 }
 
 function DesktopNavigation(props: React.ComponentPropsWithoutRef<'nav'>) {
+  const t = useT()
+  const pathname = usePathname()
+  const locale = getLocaleFromPathname(pathname)
+  const homeHref = localizedPath('home', locale)
+
+  const logoAlt = t('header.logoImageAlt', 'Marketing Puzzle logó')
+  const logoHomeAria = t('header.logoHomeLinkAriaLabel', 'Marketing Puzzle – vissza a főoldalra')
+
   return (
     <nav {...props}>
       <ul className="flex items-center rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg ring-1 ring-zinc-900/5 backdrop-blur-sm">
         <li>
           <Link
-            href="/"
-            aria-label="Marketing Puzzle - vissza a főoldalra"
+            href={homeHref}
+            aria-label={logoHomeAria}
             className={clsx('flex items-center rounded-md px-3 py-2', FOCUS_RING_PRIMARY)}
           >
             <Image
               src="/marketing-puzzle-ikon-szines-fekvo.svg"
-              alt="Marketing Puzzle logó"
+              alt={logoAlt}
               width={140}
               height={32}
               className="h-6 w-auto"
@@ -177,9 +211,9 @@ function DesktopNavigation(props: React.ComponentPropsWithoutRef<'nav'>) {
             />
           </Link>
         </li>
-        {NAV_ITEMS.filter((item) => item.href !== '/').map((item) => (
-          <DesktopNavItem key={item.href} href={item.href}>
-            {item.label}
+        {NAV_ITEMS.filter((item) => item.routeKey !== 'home').map((item) => (
+          <DesktopNavItem key={item.routeKey} routeKey={item.routeKey}>
+            {t(item.messageKey)}
           </DesktopNavItem>
         ))}
       </ul>
@@ -188,10 +222,18 @@ function DesktopNavigation(props: React.ComponentPropsWithoutRef<'nav'>) {
 }
 
 function LanguageToggle({ className }: { className?: string }) {
-  const [lang, setLang] = React.useState<'EN' | 'HU'>('EN')
+  const pathname = usePathname()
+  const router = useRouter()
+
+  const currentLocale = getLocaleFromPathname(pathname)
+  const nextLocale = currentLocale === 'hu' ? 'en' : ('hu' as const)
+  const currentLabel = currentLocale.toUpperCase() as 'HU' | 'EN'
+
   const handleClick = () => {
-    setLang((prev) => (prev === 'EN' ? 'HU' : 'EN'))
+    const nextPath = switchLocaleInPath(pathname, nextLocale)
+    router.push(nextPath)
   }
+
   return (
     <button
       type="button"
@@ -202,7 +244,7 @@ function LanguageToggle({ className }: { className?: string }) {
         FOCUS_RING_PRIMARY,
         className,
       )}
-      aria-label={`Nyelv váltása (jelenleg: ${lang})`}
+      aria-label={`Nyelv váltása (jelenleg: ${currentLabel})`}
     >
       <span
         aria-hidden="true"
@@ -210,13 +252,14 @@ function LanguageToggle({ className }: { className?: string }) {
       >
         <span className={clsx(TOGGLE_GLOW_CLASSES, glowStateClasses(false))} />
       </span>
-      <span className="relative z-10">{lang}</span>
+      <span className="relative z-10">{currentLabel}</span>
     </button>
   )
 }
 
 export function Header() {
   const showHeader = useHideOnScroll()
+
   return (
     <header className="sticky top-0 z-50 bg-transparent">
       <Container className="py-6">
