@@ -21,18 +21,74 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  async redirects() {
+    return [
+      {
+        source: '/kapcsolat',
+        destination: '/hu/kapcsolat',
+        permanent: true,
+      },
+      {
+        source: '/projektek',
+        destination: '/hu/projektek',
+        permanent: true,
+      },
+      {
+        source: '/szolgaltatasok',
+        destination: '/hu/szolgaltatasok',
+        permanent: true,
+      },
+      {
+        source: '/projektek/:slug',
+        destination: '/hu/projektek/:slug',
+        permanent: true,
+      },
+      {
+        source: '/szolgaltatasok/:slug',
+        destination: '/hu/szolgaltatasok/:slug',
+        permanent: true,
+      },
+      {
+        source: '/contact',
+        destination: '/en/contact',
+        permanent: true,
+      },
+      {
+        source: '/projects',
+        destination: '/en/projects',
+        permanent: true,
+      },
+      {
+        source: '/services',
+        destination: '/en/services',
+        permanent: true,
+      },
+      {
+        source: '/blog',
+        destination: '/en/blog',
+        permanent: true,
+      },
+      {
+        source: '/projects/:slug',
+        destination: '/en/projects/:slug',
+        permanent: true,
+      },
+      {
+        source: '/services/:slug',
+        destination: '/en/services/:slug',
+        permanent: true,
+      },
+    ]
+  },
+
   async rewrites() {
     return [
       { source: '/hu/kapcsolat', destination: '/hu/contact' },
       { source: '/hu/projektek', destination: '/hu/projects' },
       { source: '/hu/szolgaltatasok', destination: '/hu/services' },
-      { source: '/kapcsolat', destination: '/hu/contact' },
-      { source: '/projektek', destination: '/hu/projects' },
-      { source: '/szolgaltatasok', destination: '/hu/services' },
       { source: '/hu/projektek/:slug', destination: '/hu/projects/:slug' },
       { source: '/hu/szolgaltatasok/:slug', destination: '/hu/services/:slug' },
-      { source: '/projektek/:slug', destination: '/hu/projects/:slug' },
-      { source: '/szolgaltatasok/:slug', destination: '/hu/services/:slug' },
     ]
   },
 }

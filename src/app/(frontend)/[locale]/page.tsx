@@ -199,8 +199,9 @@ type PageFromPayload = {
   )[]
 }
 
-export default async function HomePage({ params }: { params: { locale: Locale } }) {
-  const { locale } = params
+export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params
+
   const payload = await getPayloadClient()
 
   const result = await payload.find({

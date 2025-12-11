@@ -17,9 +17,9 @@ export const metadata: Metadata = {
 }
 
 type FrontendLocaleLayoutProps = {
-  params: {
+  params: Promise<{
     locale: Locale
-  }
+  }>
   children: React.ReactNode
 }
 
@@ -27,7 +27,7 @@ export default async function FrontendLocaleLayout({
   params,
   children,
 }: FrontendLocaleLayoutProps) {
-  const { locale } = params
+  const { locale } = await params
 
   if (!locales.includes(locale)) {
     notFound()
