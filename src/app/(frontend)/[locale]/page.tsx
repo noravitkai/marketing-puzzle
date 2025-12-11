@@ -11,6 +11,8 @@ import { getPayloadClient } from '@/payload/getPayloadClient'
 import type { SerializedEditorState } from 'lexical'
 import { ArrowRightIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 import type { Locale } from '@/i18n/config'
+import { localizedServiceDetailPath } from '@/i18n/paths'
+import { normalizeCtaUrlForLocale } from '@/i18n/url'
 
 type Media = {
   id: string
@@ -72,7 +74,7 @@ type ServicesBlockFromPayload = {
   services?: ServiceDoc[]
 }
 
-function normalizeService(service: ServiceDoc): ServiceCard {
+function normalizeService(service: ServiceDoc, locale: Locale): ServiceCard {
   const icon = service.icon
   const iconUrl =
     icon && typeof icon === 'object' && 'url' in icon && icon.url ? icon.url : undefined
@@ -80,7 +82,7 @@ function normalizeService(service: ServiceDoc): ServiceCard {
     icon && typeof icon === 'object' && 'alt' in icon && icon.alt ? icon.alt : service.title
 
   const slug = service.slug?.trim()
-  const href = slug ? `/szolgaltatasok/${slug}` : '#'
+  const href = slug ? localizedServiceDetailPath(locale, slug) : '#'
 
   return {
     id: service.id,
@@ -245,7 +247,7 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
       serviceDocs = fetchedServices as ServiceDoc[]
     }
 
-    servicesCards = serviceDocs.map(normalizeService)
+    servicesCards = serviceDocs.map((service) => normalizeService(service, locale))
     serviceOptions = serviceDocs
       .filter((service) => Boolean(service.title))
       .map((service) => ({
@@ -280,13 +282,14 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
             return (
               <Hero
                 key={heroBlock.id}
+                locale={locale}
                 mainTitle={heroBlock.mainTitle}
                 highlightedTitle={heroBlock.highlightedTitle ?? undefined}
                 description={heroBlock.description}
                 primaryCtaLabel={heroBlock.primaryCtaLabel ?? undefined}
-                primaryCtaUrl={heroBlock.primaryCtaUrl ?? undefined}
+                primaryCtaUrl={normalizeCtaUrlForLocale(heroBlock.primaryCtaUrl, locale)}
                 secondaryCtaLabel={heroBlock.secondaryCtaLabel ?? undefined}
-                secondaryCtaUrl={heroBlock.secondaryCtaUrl ?? undefined}
+                secondaryCtaUrl={normalizeCtaUrlForLocale(heroBlock.secondaryCtaUrl, locale)}
                 cards={heroBlock.cards ?? []}
               />
             )

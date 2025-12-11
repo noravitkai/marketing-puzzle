@@ -5,7 +5,6 @@ export function getLocaleFromPathname(pathname: string): Locale {
   const segment = pathname.split('/')[1] as Locale | undefined
   return locales.includes(segment ?? defaultLocale) ? (segment as Locale) : defaultLocale
 }
-
 export function switchLocaleInPath(pathname: string, nextLocale: Locale): string {
   const withoutQuery = pathname.split(/[?#]/)[0] || '/'
   const withoutLocale = withoutQuery.replace(/^\/(hu|en)/, '') || '/'
@@ -40,5 +39,37 @@ export function switchLocaleInPath(pathname: string, nextLocale: Locale): string
     return localizedPath('blog', nextLocale)
   }
 
-  return `${localizedPath('home', nextLocale).replace(/\/(hu|en)$/, '')}${withoutLocale}`
+  return `/${nextLocale}${withoutLocale}`
+}
+
+export function normalizeCtaUrlForLocale(
+  url: string | null | undefined,
+  locale: Locale,
+): string | undefined {
+  if (!url) return undefined
+
+  const trimmed = url.trim()
+  if (!trimmed) return undefined
+
+  if (trimmed.startsWith('#')) {
+    return trimmed
+  }
+
+  if (
+    trimmed.startsWith('http://') ||
+    trimmed.startsWith('https://') ||
+    trimmed.startsWith('mailto:')
+  ) {
+    return trimmed
+  }
+
+  if (trimmed.startsWith('/hu/') || trimmed.startsWith('/en/')) {
+    return trimmed
+  }
+
+  if (trimmed.startsWith('/')) {
+    return `/${locale}${trimmed}`
+  }
+
+  return trimmed
 }

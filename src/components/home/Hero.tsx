@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Lead, Paragraph } from '@/components/ui/Text'
 import { PlayCircleIcon, ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline'
+import type { Locale } from '@/i18n/config'
+import { localizedServiceDetailPath } from '@/i18n/paths'
 
 export type HeroCard = {
   id: string
@@ -21,6 +23,7 @@ export type HeroCard = {
 }
 
 export type HeroProps = {
+  locale: Locale
   mainTitle: string
   highlightedTitle?: string
   description: string
@@ -31,14 +34,14 @@ export type HeroProps = {
   cards?: HeroCard[]
 }
 
-function resolveCardHref(card: HeroCard): string {
+function resolveCardHref(card: HeroCard, locale: Locale): string {
   if (card.service?.slug) {
-    return `/szolgaltatasok/${card.service.slug}`
+    return localizedServiceDetailPath(locale, card.service.slug)
   }
   return '#'
 }
 
-function Photos({ cards }: { cards?: HeroCard[] }) {
+function Photos({ cards, locale }: { cards?: HeroCard[]; locale: Locale }) {
   if (!cards || cards.length === 0) {
     return null
   }
@@ -52,7 +55,7 @@ function Photos({ cards }: { cards?: HeroCard[] }) {
           const imageUrl = card.image?.url
           if (!imageUrl) return null
 
-          const href = resolveCardHref(card)
+          const href = resolveCardHref(card, locale)
 
           return (
             <Link
@@ -84,6 +87,7 @@ function Photos({ cards }: { cards?: HeroCard[] }) {
 }
 
 export default function Hero({
+  locale,
   mainTitle,
   highlightedTitle,
   description,
@@ -126,7 +130,7 @@ export default function Hero({
           </div>
         </div>
       </Container>
-      <Photos cards={cards} />
+      <Photos cards={cards} locale={locale} />
     </>
   )
 }
