@@ -423,10 +423,40 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           case 'cta': {
             const ctaBlock = block as CtaBlockFromPayload
 
+            const primaryHref = normalizeCtaUrlForLocale(
+              ctaBlock.cta.primaryAction?.href ?? undefined,
+              locale,
+            )
+
+            const secondaryHref = normalizeCtaUrlForLocale(
+              ctaBlock.cta.secondaryAction?.href ?? undefined,
+              locale,
+            )
+
+            const normalizedCtaBlock: CtaBlockFromPayload = {
+              ...ctaBlock,
+              cta: {
+                ...ctaBlock.cta,
+                primaryAction: ctaBlock.cta.primaryAction
+                  ? {
+                      ...ctaBlock.cta.primaryAction,
+                      href: primaryHref,
+                    }
+                  : null,
+                secondaryAction: ctaBlock.cta.secondaryAction
+                  ? {
+                      ...ctaBlock.cta.secondaryAction,
+                      href: secondaryHref,
+                    }
+                  : null,
+                images: ctaBlock.cta.images,
+              },
+            }
+
             return (
               <CtaSection
                 key={ctaBlock.id}
-                block={ctaBlock}
+                block={normalizedCtaBlock}
                 primaryTrailingIcon={<ArrowRightIcon className="h-5 w-5" />}
                 secondaryTrailingIcon={<InformationCircleIcon className="h-5 w-5" />}
               />

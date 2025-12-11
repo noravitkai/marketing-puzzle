@@ -47,6 +47,40 @@ type CtaSectionProps = {
   secondaryTrailingIcon?: React.ReactNode
 }
 
+const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_URL
+
+function isExternalHref(href?: string | null): boolean {
+  if (!href) return false
+
+  const trimmed = href.trim()
+  if (!trimmed) return false
+
+  if (
+    trimmed.startsWith('#') ||
+    trimmed.startsWith('/') ||
+    trimmed.startsWith('mailto:') ||
+    trimmed.startsWith('tel:')
+  ) {
+    return false
+  }
+
+  if (SITE_ORIGIN && (trimmed.startsWith('http://') || trimmed.startsWith('https://'))) {
+    try {
+      const siteUrl = new URL(SITE_ORIGIN)
+      const targetUrl = new URL(trimmed)
+      return targetUrl.origin !== siteUrl.origin
+    } catch {
+      return false
+    }
+  }
+
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return true
+  }
+
+  return false
+}
+
 export default function CtaSection({
   block,
   primaryLeadingIcon,
@@ -72,6 +106,9 @@ export default function CtaSection({
           href: cta.secondaryAction.href,
         }
       : undefined
+
+  const primaryIsExternal = primaryAction ? isExternalHref(primaryAction.href) : false
+  const secondaryIsExternal = secondaryAction ? isExternalHref(secondaryAction.href) : false
 
   const images = (cta.images || [])
     .map((item) => {
@@ -130,6 +167,8 @@ export default function CtaSection({
                       variant="primary"
                       leadingIcon={primaryLeadingIcon}
                       trailingIcon={primaryTrailingIcon}
+                      target={primaryIsExternal ? '_blank' : undefined}
+                      rel={primaryIsExternal ? 'noreferrer' : undefined}
                     >
                       {primaryAction.label}
                     </Button>
@@ -140,6 +179,8 @@ export default function CtaSection({
                       variant="secondary"
                       leadingIcon={secondaryLeadingIcon}
                       trailingIcon={secondaryTrailingIcon}
+                      target={secondaryIsExternal ? '_blank' : undefined}
+                      rel={secondaryIsExternal ? 'noreferrer' : undefined}
                     >
                       {secondaryAction.label}
                     </Button>

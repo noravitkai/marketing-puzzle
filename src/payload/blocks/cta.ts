@@ -18,6 +18,7 @@ export const ctaBlock: Block = {
       label: 'Szekció címe',
       type: 'text',
       required: false,
+      localized: true,
       admin: {
         condition: (_, siblingData) => Boolean(siblingData.showHeader),
       },
@@ -27,6 +28,7 @@ export const ctaBlock: Block = {
       label: 'Alcím',
       type: 'text',
       required: false,
+      localized: true,
       admin: {
         condition: (_, siblingData) => Boolean(siblingData.showHeader),
       },
@@ -36,6 +38,7 @@ export const ctaBlock: Block = {
       label: 'Leírás',
       type: 'textarea',
       required: false,
+      localized: true,
       admin: {
         condition: (_, siblingData) => Boolean(siblingData.showHeader),
       },
@@ -70,12 +73,14 @@ export const ctaBlock: Block = {
           label: 'CTA cím',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'body',
           label: 'CTA leírás',
           type: 'richText',
           required: true,
+          localized: true,
         },
         {
           name: 'primaryAction',
@@ -87,6 +92,7 @@ export const ctaBlock: Block = {
               label: 'Felirat',
               type: 'text',
               required: false,
+              localized: true,
             },
             {
               name: 'href',
@@ -116,6 +122,7 @@ export const ctaBlock: Block = {
               label: 'Felirat',
               type: 'text',
               required: false,
+              localized: true,
             },
             {
               name: 'href',
