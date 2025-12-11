@@ -24,9 +24,10 @@ export default function Video({
   const src = `${domain}/embed/${youtubeId}?playlist=${youtubeId}&loop=1&autoplay=1&mute=1&playsinline=1&controls=1&fs=1&rel=0&modestbranding=1&iv_load_policy=3`
 
   const hasHeader = Boolean(heading || lead || description)
+  const iframeTitle = heading || 'Video'
 
   return (
-    <section id="szemlelet">
+    <section id="rolunk">
       <Container className="mt-16 sm:mt-20">
         {hasHeader ? (
           <div className="flex flex-col items-center gap-6 text-center">
@@ -49,7 +50,7 @@ export default function Video({
               <div className="relative aspect-video w-full overflow-hidden rounded-md shadow-sm ring-1 ring-zinc-900/5 backdrop-blur-sm">
                 <iframe
                   src={src}
-                  title="Összefoglaló videó"
+                  title={iframeTitle}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                   loading="lazy"

@@ -18,6 +18,7 @@ export const videoBlock: Block = {
       label: 'Szekció címe',
       type: 'text',
       required: false,
+      localized: true,
       admin: {
         condition: (_, siblingData) => Boolean(siblingData.showHeader),
       },
@@ -27,6 +28,7 @@ export const videoBlock: Block = {
       label: 'Alcím',
       type: 'text',
       required: false,
+      localized: true,
       admin: {
         condition: (_, siblingData) => Boolean(siblingData.showHeader),
       },
@@ -36,6 +38,7 @@ export const videoBlock: Block = {
       label: 'Leírás',
       type: 'textarea',
       required: false,
+      localized: true,
       admin: {
         condition: (_, siblingData) => Boolean(siblingData.showHeader),
       },
